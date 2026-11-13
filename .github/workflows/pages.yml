@@ -3,6 +3,9 @@ name: Pages
 on:
   push:
     branches: [main]
+  # The demo runs the library's main branch; a daily build picks up releases.
+  schedule:
+    - cron: "17 5 * * *"
   workflow_dispatch:
 
 permissions:
@@ -22,12 +25,20 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch the library and the example hub
+        run: node scripts/sync-library.mjs --remote
+      # Nothing deploys if the demo can't boot the hub.
+      - name: Boot the demo
+        run: node tests/smoke.mjs
       - uses: actions/configure-pages@v5
-      # Only the pages themselves, not the repo's README or licence.
+      # Only the pages themselves, not the repo's README, scripts or tests.
       - name: Collect the site
         run: |
           mkdir _site
-          cp -r index.html docs.html styles.css site.js favicon.svg img _site/
+          cp -r index.html docs.html play.html styles.css site.js favicon.svg img play _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
