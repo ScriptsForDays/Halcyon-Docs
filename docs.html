@@ -30,6 +30,7 @@
 		<nav class="nav__bar" aria-label="Main">
 			<a class="brand" href="./"><svg aria-hidden="true"><use href="#i-mark"/></svg>Halcyon</a>
 			<a class="nav__link" href="docs.html" aria-current="page">Docs</a>
+			<a class="nav__link" href="play.html">Try it</a>
 			<a class="nav__link nav__link--wide" href="#looks">Looks</a>
 			<a class="nav__link nav__link--wide" href="#assistants">For AI</a>
 			<a class="icon-button" href="https://github.com/ScriptsForDays/Halcyon" aria-label="Halcyon on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
@@ -107,12 +108,24 @@ Window:LoadAutoload()</code></pre>
 							<tr><td><code>Size</code>, <code>Scale</code></td><td>Starting size (always fitted to the screen) and interface scale.</td></tr>
 							<tr><td><code>ToggleKey</code></td><td>The key that shows and hides the window. RightShift by default.</td></tr>
 							<tr><td><code>TopbarImage</code></td><td>A picture before the title, in six shapes with <code>TopbarImageStyle</code>.</td></tr>
+							<tr><td><code>HeaderStyle</code>, <code>Logo</code></td><td>Bar, Tall, Wordmark or Sidebar. Sidebar puts a big logo above the tabs and drops the top bar.</td></tr>
 							<tr><td><code>CommandPalette</code></td><td><code>true</code> lets Ctrl+K search every tab and setting.</td></tr>
 							<tr><td><code>Profile</code>, <code>KeySystem</code>, <code>UpdateLog</code></td><td>Covered in their own parts below.</td></tr>
 						</tbody>
 					</table>
 				</div>
-				<p>The window also has <code>Notify</code>, <code>Dialog</code>, <code>SetEnabled</code> (grey every control), <code>AddTopbarButton</code> and <code>Unload</code>. The full list is in the <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#window">API reference</a>.</p>
+				<p>Every built-in part turns on or off with <code>true</code> or <code>false</code>: <code>Search</code>, <code>Profile</code>, <code>Close</code>, <code>Minimize</code>, <code>Resize</code>, <code>Drag</code>, <code>Shadow</code>, <code>Tooltips</code>, <code>Animations</code>, <code>Blur</code>, <code>NotificationCenter</code>, <code>Watermark</code>, <code>KeybindList</code>, <code>SettingsTab</code> and more. <code>Window:Set("Search", false)</code> flips one while the hub runs.</p>
+				<div class="code">
+					<pre><code><span class="tok-k">local</span> Window = Halcyon:CreateWindow({
+	Title = <span class="tok-s">"My Hub"</span>,
+	HeaderStyle = <span class="tok-s">"Sidebar"</span>,
+	Close = <span class="tok-k">false</span>,
+	NotificationCenter = <span class="tok-k">true</span>,
+})
+Window:Set(<span class="tok-s">"Search"</span>, <span class="tok-k">false</span>)</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p>The window also has <code>Notify</code>, <code>Dialog</code>, <code>SetEnabled</code> (grey every control), <code>AddTopbarButton</code>, <code>Sheet</code> (a side panel), <code>QuickBar</code> (a floating bar that stays when the window hides) and <code>Unload</code>. The full list is in the <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#switches">API reference</a>.</p>
 			</section>
 
 			<section id="tabs" aria-labelledby="tabs-h">
@@ -129,7 +142,8 @@ Aim:Tab(<span class="tok-s">"NPCs"</span>):Toggle({ Title = <span class="tok-s">
 				<ul>
 					<li><strong>Tabs inside a section</strong> (<code>Tabs</code>) keep parallel settings together.</li>
 					<li><strong>A header switch</strong> (<code>Switch</code>) greys every row in the section while it's off.</li>
-					<li><strong><code>ShowWhen</code></strong> on any row or section shows it only while another control has a value, so tuning options appear only when they apply.</li>
+					<li><strong><code>ShowWhen</code></strong> on any row or section shows it only while another control has a value, so tuning options appear only when they apply. <code>EnableWhen</code> greys it instead, and <code>Visible = false</code> or <code>Disabled = true</code> work on tabs, sections and rows.</li>
+					<li><strong><code>Section:Group()</code></strong> puts two or three short controls on one line.</li>
 					<li><strong>Locks:</strong> <code>Tier</code> or <code>PaidOnly</code> on a tab, section or row keeps it visible but locked, with your own wording.</li>
 				</ul>
 			</section>
@@ -152,12 +166,16 @@ Aim:Tab(<span class="tok-s">"NPCs"</span>):Toggle({ Title = <span class="tok-s">
 							<tr><td><code>Stepper</code>, <code>Rating</code></td><td>Small exact counts and levels.</td></tr>
 							<tr><td><code>Progress</code>, <code>Status</code>, <code>Countdown</code></td><td>State the hub reports: progress, a status pill, time left.</td></tr>
 							<tr><td><code>Table</code></td><td>Sortable rows and columns of data.</td></tr>
+							<tr><td><code>List</code>, <code>Tags</code></td><td>Picks shown in place or dragged into order, and words the player types into chips.</td></tr>
+							<tr><td><code>PlayerList</code></td><td>The server's players, with your own buttons on each row.</td></tr>
+							<tr><td><code>Stat</code>, <code>Stats</code>, <code>Graph</code>, <code>Log</code></td><td>Figures, live charts and a log panel for dashboards.</td></tr>
+							<tr><td><code>MenuButton</code>, <code>Banner</code>, <code>Link</code></td><td>A menu of actions, an announcement card, and an address the player can copy.</td></tr>
 							<tr><td><code>Paragraph</code>, <code>Label</code>, <code>Accordion</code></td><td>Text, callouts and fold-out help.</td></tr>
 							<tr><td><code>Divider</code>, <code>Space</code>, <code>Code</code>, <code>Image</code></td><td>Structure and media.</td></tr>
 						</tbody>
 					</table>
 				</div>
-				<p>Every control also takes <code>Description</code>, <code>Icon</code>, <code>Flag</code>, <code>Tooltip</code>, <code>Badge</code>, <code>Info</code> and <code>Requires</code> (lock the row when the executor lacks a function). Options for each control are in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#elements">the API reference</a>.</p>
+				<p>Every control also takes <code>Description</code>, <code>Icon</code>, <code>Flag</code>, <code>Tooltip</code>, <code>Badge</code>, <code>Info</code>, <code>Menu</code> (actions on a right-click or long press) and <code>Requires</code> (lock the row when the executor lacks a function). Options for each control are in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#elements">the API reference</a>.</p>
 			</section>
 
 			<section id="looks" aria-labelledby="looks-h">
@@ -251,7 +269,7 @@ Window:Dialog({
 })</code></pre>
 					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
 				</div>
-				<p>Notices come in ten styles. Send them for results players can't see (saved, failed, finished), not for every toggle; the switch moving is feedback enough.</p>
+				<p>Notices come in ten styles. They pause while hovered and swipe away, and <code>NotificationCenter = true</code> keeps the last 50 behind a bell in the top bar. Send them for results players can't see (saved, failed, finished), not for every toggle; the switch moving is feedback enough.</p>
 			</section>
 
 			<section id="updates" aria-labelledby="updates-h">
@@ -312,6 +330,14 @@ Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { K
 
 			<section id="changelog" aria-labelledby="changelog-h">
 				<h2 id="changelog-h"><a class="heading-link" href="#changelog">Changelog</a></h2>
+				<h3>2.2.0</h3>
+				<ul>
+					<li>Every built-in part turns on or off with <code>true</code> or <code>false</code>, and <code>Window:Set</code> flips them live.</li>
+					<li>Header styles, including a big logo above the sidebar.</li>
+					<li>List, Tags, PlayerList, MenuButton, Stat, Graph, Log, Banner and Link, plus row menus, sheets and a quick bar.</li>
+					<li>Notices with a full-height accent edge, hover pause, swipe to dismiss and a history behind a bell.</li>
+					<li>Shorter labels throughout, and a playable demo on this site.</li>
+				</ul>
 				<h3>2.1.0</h3>
 				<ul>
 					<li>Images from a URL or workspace file anywhere the UI takes one, through <code>getcustomasset</code>.</li>
