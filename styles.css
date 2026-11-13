@@ -36,7 +36,7 @@
 
 	--z-nav: 50;
 	--z-skip: 100;
-	--z-cursor: 200;
+	--z-tap: 200;
 
 	--measure: 68ch;
 	--page: 1180px;
@@ -1002,115 +1002,36 @@ pre {
 	transform: none;
 }
 
-/* The cursor: a small dot that tracks exactly and a ring that follows with
-   a little lag. Over the product shot the ring becomes a label. */
-.cursor {
-	display: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-	.has-cursor,
-	.has-cursor a,
-	.has-cursor button {
-		cursor: none;
-	}
-
-	.has-cursor .cursor {
-		display: block;
-	}
-}
-
-.cursor__dot,
-.cursor__ring {
+/* The tap: a soft circle at the press point that grows and fades. Only
+   transform and opacity animate, and the element never takes clicks. */
+.tap {
 	position: fixed;
-	left: 0;
-	top: 0;
-	z-index: var(--z-cursor);
+	z-index: var(--z-tap);
+	width: 44px;
+	height: 44px;
+	margin: -22px 0 0 -22px;
+	border-radius: var(--radius-pill);
+	background: color-mix(in oklch, var(--color-accent) 35%, transparent);
 	pointer-events: none;
-	will-change: transform;
+	animation: tap 400ms var(--ease-out) forwards;
 }
 
-.cursor__dot {
-	width: 6px;
-	height: 6px;
-	margin: -3px 0 0 -3px;
-	border-radius: var(--radius-pill);
-	background: var(--color-ink);
-	transition: opacity var(--dur-fast) var(--ease-out);
-}
+/* The circle reaches most of its size early but keeps its colour a moment
+   longer, so the press is seen before it fades. */
+@keyframes tap {
+	0% {
+		opacity: 1;
+		transform: scale(0.2);
+	}
 
-.cursor__ring {
-	width: 0;
-	height: 0;
-}
+	45% {
+		opacity: 0.8;
+	}
 
-/* Every change of shape is a transform or an opacity change on a child,
-   so the cursor never triggers layout. */
-.cursor__shape,
-.cursor__label,
-.cursor__caret {
-	position: absolute;
-	left: 0;
-	top: 0;
-	transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-fast) var(--ease-out),
-		background-color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
-}
-
-.cursor__shape {
-	width: 34px;
-	height: 34px;
-	border-radius: var(--radius-pill);
-	border: 1.5px solid color-mix(in oklch, var(--color-ink) 45%, transparent);
-	transform: translate(-50%, -50%);
-}
-
-.cursor__label {
-	padding: var(--space-1) var(--space-3);
-	border-radius: var(--radius-pill);
-	background: var(--color-accent);
-	color: var(--color-accent-ink);
-	font-size: var(--text-xs);
-	font-weight: 600;
-	white-space: nowrap;
-	opacity: 0;
-	transform: translate(-50%, -50%) scale(0.6);
-}
-
-.cursor__caret {
-	width: 3px;
-	height: 22px;
-	border-radius: 2px;
-	background: var(--color-accent);
-	opacity: 0;
-	transform: translate(-50%, -50%) scaleY(0.4);
-}
-
-.cursor[data-mode="link"] .cursor__shape {
-	border-color: var(--color-accent);
-	background: var(--color-accent-soft);
-	transform: translate(-50%, -50%) scale(1.35);
-}
-
-.cursor[data-mode="label"] .cursor__shape,
-.cursor[data-mode="text"] .cursor__shape,
-.cursor[data-mode="label"] .cursor__dot,
-.cursor[data-mode="text"] .cursor__dot {
-	opacity: 0;
-}
-
-.cursor[data-mode="label"] .cursor__label {
-	opacity: 1;
-	transform: translate(-50%, -50%) scale(1);
-}
-
-.cursor[data-mode="text"] .cursor__caret {
-	opacity: 1;
-	transform: translate(-50%, -50%) scaleY(1);
-}
-
-.cursor[data-hidden] .cursor__ring,
-.cursor[data-hidden] .cursor__dot {
-	opacity: 0;
+	100% {
+		opacity: 0;
+		transform: scale(1);
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1133,10 +1054,8 @@ pre {
 		transition: opacity 120ms linear;
 	}
 
-	.cursor__shape,
-	.cursor__label,
-	.cursor__caret {
-		transition: opacity 120ms linear;
+	.tap {
+		display: none;
 	}
 }
 

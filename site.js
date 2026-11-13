@@ -195,68 +195,28 @@
 		);
 	}
 
-	// Cursor: a dot that tracks the pointer exactly and a ring that eases
-	// after it. Links grow the ring; the product shot turns it into a label;
-	// code turns it into a caret. Touch screens keep the system cursor.
-	if (!finePointer.matches) {
-		return;
-	}
-	const cursor = document.createElement("div");
-	cursor.className = "cursor";
-	cursor.setAttribute("aria-hidden", "true");
-	cursor.innerHTML =
-		'<div class="cursor__ring"><div class="cursor__shape"></div><span class="cursor__label"></span><div class="cursor__caret"></div></div><div class="cursor__dot"></div>';
-	document.body.append(cursor);
-	root.classList.add("has-cursor");
-	const ring = cursor.querySelector(".cursor__ring");
-	const dot = cursor.querySelector(".cursor__dot");
-	const label = ring.querySelector(".cursor__label");
-	let x = -100;
-	let y = -100;
-	let ringX = x;
-	let ringY = y;
-	let frame = 0;
-
-	const tick = () => {
-		const ease = reducedMotion.matches ? 1 : 0.2;
-		ringX += (x - ringX) * ease;
-		ringY += (y - ringY) * ease;
-		ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-		if (Math.abs(x - ringX) > 0.1 || Math.abs(y - ringY) > 0.1) {
-			frame = requestAnimationFrame(tick);
-		} else {
-			frame = 0;
-		}
-	};
-
-	window.addEventListener(
-		"pointermove",
+	// Tap: a soft circle grows out from wherever a link, button or tab is
+	// pressed and fades, like a touch on a phone. The pointer itself is
+	// left alone. Nothing plays when the visitor asks for less motion.
+	const pressable = "a, button, [role=tab], summary, label, .shot__frame";
+	document.addEventListener(
+		"pointerdown",
 		(event) => {
-			if (event.pointerType !== "mouse") {
+			if (reducedMotion.matches || event.button !== 0) {
 				return;
 			}
-			x = event.clientX;
-			y = event.clientY;
-			dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-			delete cursor.dataset.hidden;
-			if (!frame) {
-				frame = requestAnimationFrame(tick);
+			const target = event.target instanceof Element ? event.target.closest(pressable) : null;
+			if (!target) {
+				return;
 			}
-			const target = event.target instanceof Element ? event.target : null;
-			const labelled = target && target.closest("[data-cursor-label]");
-			if (labelled) {
-				cursor.dataset.mode = "label";
-				label.textContent = labelled.dataset.cursorLabel;
-			} else if (target && target.closest("pre, input, textarea")) {
-				cursor.dataset.mode = "text";
-			} else if (target && target.closest("a, button, [role=tab]")) {
-				cursor.dataset.mode = "link";
-			} else {
-				delete cursor.dataset.mode;
-			}
+			const tap = document.createElement("span");
+			tap.className = "tap";
+			tap.setAttribute("aria-hidden", "true");
+			tap.style.left = `${event.clientX}px`;
+			tap.style.top = `${event.clientY}px`;
+			tap.addEventListener("animationend", () => tap.remove(), { once: true });
+			document.body.append(tap);
 		},
 		{ passive: true }
 	);
-	document.addEventListener("pointerleave", () => (cursor.dataset.hidden = ""));
-	window.addEventListener("blur", () => (cursor.dataset.hidden = ""));
 })();
