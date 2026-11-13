@@ -1,0 +1,258 @@
+let InternalLuauWasmModule
+
+// Halcyon demo: always the Asyncify build. It loads in every current browser
+// and its calls between Luau and JavaScript were the faster of the two.
+InternalLuauWasmModule = (await import('./lib/Luau.Web.Asyncify.js')).default
+
+var Luau = {
+    LUA_VALUE: Symbol('LuaValue'),
+    JS_VALUE: Symbol('JsValue'),
+    JS_MUTABLE: Symbol('JsMutable'),
+    JS_INDEXABLE: Symbol('JsIndexable'),
+
+    securityTransmitList: new Map(),
+    options: new Map([['LUA_IMPLICIT_ARRAYS_TO_JS_ARRAYS', true]]),
+    states: [],
+}
+
+var Initialized = false
+var InitPromise = null
+
+async function ensureInitialized() {
+    if (InitPromise) return InitPromise
+    if (Initialized) return true
+
+    InitPromise = (async () => {
+        const moduleInstance = await InternalLuauWasmModule(Luau)
+
+        Object.assign(Luau, moduleInstance)
+
+        Initialized = true
+        return true
+    })()
+
+    return InitPromise
+}
+
+class CompileError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = 'CompileError'
+    }
+}
+
+function Mutable(object) {
+    const map = object instanceof Map ? object : new Map(Object.entries(object))
+    map.set(Luau.JS_MUTABLE, true)
+
+    const entries = function* () {
+        for (const entry of map) if (entry[0] !== Luau.JS_MUTABLE) yield entry
+    }
+    const hidden = {
+        size: () => map.size - 1,
+        keys: () =>
+            (function* () {
+                for (const [k] of entries()) yield k
+            })(),
+        values: () =>
+            (function* () {
+                for (const [, v] of entries()) yield v
+            })(),
+        entries,
+        [Symbol.iterator]: entries,
+        forEach: (cb, thisArg) => {
+            for (const [k, v] of entries()) cb.call(thisArg, v, k, proxy)
+        },
+    }
+
+    const proxy = new Proxy(map, {
+        get(target, prop, receiver) {
+            if (prop in hidden)
+                return prop === 'size' ? hidden.size() : hidden[prop]
+            const val = Reflect.get(target, prop, target)
+            if (typeof val === 'function') return val.bind(target)
+            if (target.has(prop)) return target.get(prop)
+            return val
+        },
+        set(target, prop, value) {
+            target.set(prop, value)
+            return true
+        },
+        getPrototypeOf() {
+            return Map.prototype
+        },
+    })
+
+    return proxy
+}
+
+function Indexable(fn) {
+    if (typeof fn !== 'function') {
+        throw new TypeError('Indexable expects a function')
+    }
+
+    return new Proxy(fn, {
+        has(target, prop) {
+            return prop === Luau.JS_INDEXABLE || Reflect.has(target, prop)
+        },
+        get(target, prop) {
+            return prop === Luau.JS_INDEXABLE
+                ? true
+                : Reflect.get(target, prop, target)
+        },
+    })
+}
+
+function warnPending(stateIdx) {
+    const pending = Luau.states[stateIdx]?.pendingCalls ?? 0
+    if (pending >= 1) {
+        Luau.fprintwarn(
+            `${pending} lua call${pending != 1 ? 's' : ''} still running while closing, did you forget to await a call?`,
+        )
+    }
+}
+
+const stateRegistry =
+    typeof FinalizationRegistry === 'function'
+        ? new FinalizationRegistry(stateIdx => {
+              try {
+                  warnPending(stateIdx)
+              } catch {}
+          })
+        : null
+
+try {
+    if (typeof process !== 'undefined' && typeof process.on === 'function') {
+        process.on('exit', () => {
+            try {
+                for (let i = 0; i < Luau.states.length; i++) {
+                    if (Luau.states[i]) {
+                        warnPending(i)
+                    }
+                }
+            } catch {}
+        })
+    }
+} catch {}
+
+class LuauState {
+    static async createAsync(initialEnv) {
+        await ensureInitialized()
+
+        const instance = new LuauState()
+        instance.state = await Luau._makeLuaState(instance.stateIdx)
+        instance.env = Luau.states[instance.stateIdx].env
+
+        if (initialEnv) {
+            for (const [key, value] of Object.entries(initialEnv)) {
+                if (!instance.env.set(key, value, true)) {
+                    Luau.fprintwarn(
+                        `illegal state: lua globals key ${key} wasn't set`,
+                    )
+                }
+            }
+        }
+
+        return instance
+    }
+
+    constructor() {
+        if (!Initialized) {
+            throw new Error(
+                'Luau not initialized. Use LuauState.createAsync() instead of new LuauState()',
+            )
+        }
+
+        Luau.states = Luau.states || []
+        this.stateIdx = Luau.states.length + 1
+        Luau.states[this.stateIdx] = {}
+        Luau.states[this.stateIdx].luaValueCache = new Map()
+        Luau.states[this.stateIdx].jsValueCache = new Map()
+        Luau.states[this.stateIdx].jsValueReverse = new Map()
+        Luau.states[this.stateIdx].transactionData = []
+        Luau.states[this.stateIdx].nextJSRef = -1
+        Luau.states[this.stateIdx].nextTXKey = 0
+
+        this.destroyed = false
+        this.state = null
+        this.env = null
+
+        stateRegistry?.register(this, this.stateIdx, this)
+    }
+
+    getValue(idx) {
+        if (this.destroyed) {
+            throw new Luau.GlueError('Cannot use destroyed Luau state')
+        }
+
+        var transactionId = Luau._getLuaValue(this.state, idx)
+        var luauValue = null
+        try {
+            luauValue = JSON.parse(
+                Luau.states[this.stateIdx].transactionData[transactionId],
+            )
+        } catch (e) {}
+        return Luau.luauToJsValue(this.stateIdx, this.state, luauValue)
+    }
+
+    makeTransaction(value) {
+        if (this.destroyed) {
+            throw new Luau.GlueError('Cannot use destroyed Luau state')
+        }
+
+        const idx = Luau.states[this.stateIdx].nextTXKey++
+        Luau.states[this.stateIdx].transactionData[idx] = value
+
+        return idx
+    }
+
+    loadstring(source, chunkname = 'LuauWeb', throwOnCompilationError = false) {
+        if (this.destroyed) {
+            throw new Luau.GlueError('Cannot use destroyed Luau state')
+        }
+
+        const loadStatus = Luau._luauLoad(
+            this.state,
+            this.makeTransaction(source),
+            this.makeTransaction(chunkname),
+        )
+
+        if (loadStatus != 0) {
+            const error = this.getValue(-1)
+            if (throwOnCompilationError) {
+                throw new CompileError(error)
+            }
+            return error
+        }
+
+        return this.getValue(-1)
+    }
+
+    destroy() {
+        if (this.destroyed) {
+            throw new Luau.GlueError('Cannot use destroyed Luau state')
+        }
+
+        const pending = Luau.states[this.stateIdx]?.pendingCalls ?? 0
+        if (pending > 0) {
+            Luau.fprintwarn(
+                `destroying a state with ${pending} lua call${pending != 1 ? 's' : ''} still running, did you forget to await a call?`,
+            )
+        }
+
+        this.destroyed = true
+        this.env = null
+        Luau.states[this.stateIdx] = null
+        stateRegistry?.unregister(this)
+
+        Luau._luauClose(this.state)
+    }
+}
+
+export {
+    Mutable,
+    Indexable,
+    LuauState,
+    CompileError,
+    Luau as InternalLuauWasmModule,
+}

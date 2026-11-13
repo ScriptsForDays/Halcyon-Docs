@@ -1,0 +1,4 @@
+.build/
+node_modules/
+# Copied in by scripts/sync-library.mjs; the Pages build fetches it fresh.
+play/lib/

@@ -1,0 +1,213 @@
+/* The demo's stage and the elements the renderer draws. Everything visual
+   about the hub itself comes from the library through inline styles; these
+   rules only set the box model Roblox uses. */
+
+.stage {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: none;
+	font-family: "Inter", system-ui, sans-serif;
+	font-synthesis: none;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	/* A plain place to stand in for a game: sky over a grey baseplate. */
+	background:
+		linear-gradient(180deg, #7fb6e8 0%, #a9cdee 34%, #8f959e 34.2%, #7c828b 100%);
+}
+
+.stage::after {
+	content: "";
+	position: absolute;
+	inset: 34% 0 0 0;
+	z-index: -1;
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+	background-size: 28px 28px;
+	pointer-events: none;
+}
+
+.hc-root {
+	position: absolute;
+	inset: 0;
+}
+
+.hc-layer {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}
+
+.hc {
+	position: relative;
+	box-sizing: border-box;
+	display: grid;
+	min-width: 0;
+	min-height: 0;
+}
+
+.hc-scroll {
+	display: block;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(140, 146, 158, 0.55) transparent;
+}
+
+.hc-nobar {
+	scrollbar-width: none;
+}
+
+.hc-nobar::-webkit-scrollbar {
+	display: none;
+}
+
+.hc-canvas {
+	position: relative;
+	box-sizing: border-box;
+	display: grid;
+	grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}
+
+.hc-text {
+	grid-area: 1 / 1;
+	display: flex;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	pointer-events: none;
+}
+
+.hc-run {
+	min-width: 0;
+}
+
+.hc-input {
+	grid-area: 1 / 1;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	/* The library marks a focused box itself (its outline turns the accent
+	   colour), the same as in Roblox, so the browser's ring would double it. */
+	outline: none;
+	background: transparent;
+	font: inherit;
+	user-select: text;
+	-webkit-user-select: text;
+}
+
+.hc-input::placeholder {
+	color: var(--placeholder);
+}
+
+.hc-image {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+}
+
+.hc-image svg {
+	width: 100%;
+	height: 100%;
+}
+
+.hc-picture {
+	background-size: cover;
+	background-position: center;
+}
+
+/* Roblox draws the shadow as a nine-slice image that is dark all the way
+   under the window, so it is a blurred filled box here. A box-shadow alone
+   leaves the strip just below the window unshaded. */
+.hc-shadow {
+	inset: 50px;
+	border-radius: 14px;
+	background: #000;
+	filter: blur(18px);
+}
+
+/* The page around the stage. */
+
+.play {
+	display: flex;
+	flex-direction: column;
+	min-height: 100dvh;
+	padding: calc(var(--space-9) + var(--space-5)) var(--space-4) var(--space-5);
+	box-sizing: border-box;
+}
+
+.play__bar {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: var(--space-4);
+	width: min(100%, 1400px);
+	margin: 0 auto var(--space-4);
+}
+
+.play__title {
+	margin: 0;
+	font-size: var(--text-xl);
+	letter-spacing: -0.02em;
+	text-wrap: balance;
+}
+
+.play__note {
+	margin: var(--space-1) 0 0;
+	max-width: 62ch;
+	color: var(--color-ink-2);
+	font-size: var(--text-sm);
+}
+
+.play .stage {
+	flex: 1;
+	width: min(100%, 1400px);
+	min-height: 560px;
+	margin: 0 auto;
+	border-radius: var(--radius-lg);
+	box-shadow: 0 0 0 1px var(--color-line);
+}
+
+.stage__status {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: grid;
+	place-items: center;
+	margin: 0;
+	color: #fff;
+	font-size: var(--text-sm);
+	font-weight: 500;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* display: grid above would otherwise beat the hidden attribute. */
+.stage__status[hidden] {
+	display: none;
+}
+
+@media (max-width: 640px) {
+	.play {
+		padding-inline: 0;
+		padding-bottom: 0;
+	}
+
+	.play__bar {
+		padding-inline: var(--space-4);
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.play .stage {
+		min-height: calc(100dvh - 180px);
+		border-radius: 0;
+	}
+}
