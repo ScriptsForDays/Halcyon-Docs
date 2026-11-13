@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Halcyon · UI library for Roblox script hubs</title>
+	<meta name="description" content="Halcyon is a Luau UI library for Roblox script hubs: one loadstring, 27 controls with named looks, a key system with tiers, saved configs and sixteen themes.">
+	<meta name="theme-color" content="#f8f9fb">
+	<meta property="og:title" content="Halcyon · UI library for Roblox script hubs">
+	<meta property="og:description" content="One loadstring, 27 controls with named looks, a key system with tiers, saved configs and sixteen themes.">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://scriptsfordays.github.io/Halcyon-Docs/img/hero.jpg">
+	<link rel="icon" href="favicon.svg" type="image/svg+xml">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
+	<link rel="stylesheet" href="styles.css">
+	<script src="site.js" defer></script>
+</head>
+<body>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="i-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14a5 5 0 0 1 10 0"/><path d="M3 14h18"/><path d="M6.5 18h11"/><path d="M10 21.5h4"/><path d="M12 5v2"/><path d="m5.6 7.6 1.4 1.4"/><path d="m18.4 7.6-1.4 1.4"/></symbol>
+		<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+		<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+		<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+		<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+		<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+		<symbol id="i-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+	</svg>
+
+	<a class="skip" href="#main">Skip to content</a>
+
+	<header class="nav">
+		<nav class="nav__bar" aria-label="Main">
+			<a class="brand" href="./"><svg aria-hidden="true"><use href="#i-mark"/></svg>Halcyon</a>
+			<a class="nav__link" href="docs.html">Docs</a>
+			<a class="nav__link nav__link--wide" href="docs.html#looks">Looks</a>
+			<a class="nav__link nav__link--wide" href="docs.html#assistants">For AI</a>
+			<a class="icon-button" href="https://github.com/ScriptsForDays/Halcyon" aria-label="Halcyon on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+			<button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+				<svg class="icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+				<svg class="icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+			</button>
+		</nav>
+	</header>
+
+	<main id="main">
+		<div class="wrap hero">
+			<div>
+				<h1 class="hero__title">Script hubs that feel <span>finished</span>.</h1>
+				<p class="hero__lede">Halcyon is a Luau UI library for Roblox executors. One loadstring gives you a window with 27 controls, a key system with tiers, saved configs and sixteen themes, and it reflows from a 4K monitor down to a phone.</p>
+				<div class="hero__actions">
+					<a class="button button--primary" href="docs.html#start">Read the docs <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+					<a class="button button--quiet" href="https://github.com/ScriptsForDays/Halcyon"><svg aria-hidden="true"><use href="#i-github"/></svg>Source</a>
+				</div>
+				<div class="install">
+					<p class="install__label">Load it in your executor</p>
+					<div class="code">
+						<pre><code><span class="tok-k">local</span> Halcyon = loadstring(game:HttpGet(<span class="tok-s">"https://raw.githubusercontent.com/ScriptsForDays/Halcyon/main/dist/Halcyon.luau"</span>))()</code></pre>
+						<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+					</div>
+				</div>
+			</div>
+
+			<div class="showcase">
+				<div class="switcher" role="tablist" aria-label="Halcyon looks" data-switcher>
+					<button role="tab" aria-selected="true" tabindex="0" data-look="controls" data-caption="Every toggle and slider look, side by side in the example hub.">Controls</button>
+					<button role="tab" aria-selected="false" tabindex="-1" data-look="glass" data-caption="The Glass preset with Mac-style window buttons, set with one option.">Glass</button>
+					<button role="tab" aria-selected="false" tabindex="-1" data-look="notices" data-caption="Island, Glass, Achievement and Snackbar notices, plus a one-time spotlight.">Notices</button>
+					<button role="tab" aria-selected="false" tabindex="-1" data-look="palette" data-caption="Ctrl+K searches every tab and setting and jumps to the row.">Search</button>
+					<button role="tab" aria-selected="false" tabindex="-1" data-look="personalise" data-caption="Players pick their own font, corners, spacing and colours.">Personalise</button>
+				</div>
+				<figure class="shot">
+					<div class="shot__frame" data-tilt data-shots data-cursor-label="Halcyon" aria-label="Toggle and slider looks in the example hub" role="img">
+						<img data-look="controls" data-active src="img/looks-controls.jpg" width="1095" height="568" alt="Toggle and slider looks in the example hub">
+						<img data-look="glass" src="img/looks-glass.jpg" width="1095" height="568" alt="The Glass preset with Mac-style window buttons" loading="lazy">
+						<img data-look="notices" src="img/looks-notices.jpg" width="1153" height="568" alt="Several notice styles stacked on screen" loading="lazy">
+						<img data-look="palette" src="img/looks-palette.jpg" width="1095" height="568" alt="The command palette listing settings that match a search" loading="lazy">
+						<img data-look="personalise" src="img/looks-personalise.jpg" width="1095" height="568" alt="The Personalise section of the settings tab" loading="lazy">
+					</div>
+					<figcaption data-shot-caption aria-live="polite">Every toggle and slider look, side by side in the example hub.</figcaption>
+				</figure>
+			</div>
+		</div>
+
+		<section class="section" aria-labelledby="looks-title">
+			<div class="wrap split">
+				<div data-reveal>
+					<h2 class="section__title" id="looks-title">A named look for every control.</h2>
+					<p class="section__body">The defaults already look finished. When a hub wants its own feel, set <code>Style</code> on one element, <code>Styles</code> on the window, or pick one of five presets. Misspell a name and you get the default, not an error.</p>
+					<dl class="counts">
+						<div><dt>Toggle</dt><dd>10</dd></div>
+						<div><dt>Slider</dt><dd>7</dd></div>
+						<div><dt>Button</dt><dd>8</dd></div>
+						<div><dt>Section</dt><dd>7</dd></div>
+						<div><dt>Notice</dt><dd>10</dd></div>
+						<div><dt>Theme</dt><dd>16</dd></div>
+					</dl>
+				</div>
+				<figure class="picture" data-reveal>
+					<img src="img/looks-choices.jpg" width="1095" height="568" alt="Dropdown looks: boxed, minimal, chips, inline and a player picker" loading="lazy">
+				</figure>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="keys-title">
+			<div class="wrap split split--flip">
+				<div data-reveal>
+					<h2 class="section__title" id="keys-title">Keys, tiers and paid features, built in.</h2>
+					<p class="section__body">Keyless, Free and Paid tiers, or your own. Keys from a list, your validator or your server. Rows, sections and whole tabs lock to a tier and say why, so players see what they're missing instead of a blank space.</p>
+					<ul class="facts">
+						<li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Ad-service confirmation</strong> for free keys, wired to the service's own API.</span></li>
+						<li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Saved keys with expiry</strong>, shown on the prompt and the profile card.</span></li>
+						<li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>A Discord button</strong> on the prompt and the profile, each optional.</span></li>
+					</ul>
+				</div>
+				<figure class="picture" data-reveal>
+					<img src="img/key-system.jpg" width="578" height="483" alt="The key prompt with Keyless, Free and Paid tier cards" loading="lazy">
+				</figure>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="themes-title">
+			<div class="wrap split">
+				<div data-reveal>
+					<h2 class="section__title" id="themes-title">Players make it theirs.</h2>
+					<p class="section__body">Sixteen themes with readable text on every surface, a theme builder players can save and share from, and live settings for font, text size, corners and spacing. Their choices are saved on the device.</p>
+				</div>
+				<figure class="picture" data-reveal>
+					<img src="img/themes.jpg" width="1326" height="692" alt="The same hub in four themes" loading="lazy">
+				</figure>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="panels-title">
+			<div class="wrap">
+				<div data-reveal>
+					<h2 class="section__title" id="panels-title">The parts you'd otherwise build by hand.</h2>
+					<p class="section__body">A loading screen that moves only when your hub reports progress, a what's-new card shown once per version, an update log, empty states and a lock screen for maintenance.</p>
+				</div>
+				<div class="panels">
+					<figure data-reveal>
+						<div class="picture"><img src="img/looks-changelog.jpg" width="878" height="503" alt="A what's-new card listing new, improved and fixed changes" loading="lazy"></div>
+						<figcaption><code>Window:Changelog</code> shows once per version.</figcaption>
+					</figure>
+					<figure data-reveal>
+						<div class="picture"><img src="img/looks-loading.jpg" width="878" height="503" alt="A loading screen with a progress bar" loading="lazy"></div>
+						<figcaption><code>Window:Loading</code> reports real setup steps.</figcaption>
+					</figure>
+					<figure data-reveal>
+						<div class="picture"><img src="img/looks-empty.jpg" width="878" height="503" alt="An empty state with a refresh button" loading="lazy"></div>
+						<figcaption><code>Tab:EmptyState</code> for content that isn't ready.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</section>
+
+		<section class="section section--tight" aria-labelledby="assistants-title">
+			<div class="wrap split split--flip">
+				<div data-reveal>
+					<h2 class="section__title" id="assistants-title">Written for assistants, too.</h2>
+					<p class="section__body">LLM.txt describes every component the same way: what it's for, when not to use it, its options and its mistakes. The layout guide teaches an assistant to choose controls and leave things out, so vibe-coded hubs stay tidy.</p>
+					<div class="hero__actions">
+						<a class="button button--quiet" href="https://github.com/ScriptsForDays/Halcyon/blob/main/LLM.txt">LLM.txt</a>
+						<a class="button button--quiet" href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/llm-guide.md">Layout guide</a>
+					</div>
+				</div>
+				<div class="code" data-reveal>
+					<pre><code><span class="tok-k">local</span> Window = Halcyon:CreateWindow({ Title = <span class="tok-s">"My Hub"</span>, Folder = <span class="tok-s">"MyHub"</span> })
+<span class="tok-k">local</span> Player = Window:Tab({ Title = <span class="tok-s">"Player"</span>, Icon = <span class="tok-s">"user"</span> })
+<span class="tok-k">local</span> Movement = Player:Section({ Title = <span class="tok-s">"Movement"</span> })
+
+Movement:Toggle({ Title = <span class="tok-s">"Fly"</span>, Flag = <span class="tok-s">"Fly"</span>, Callback = <span class="tok-k">function</span>(on) <span class="tok-k">end</span> })
+Movement:Slider({ Title = <span class="tok-s">"Walk speed"</span>, Min = 16, Max = 120, Default = 32 })
+
+Window:SettingsTab()
+Window:LoadAutoload()</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+			</div>
+		</section>
+
+		<section class="wrap statement" aria-label="Get started">
+			<p class="statement__line" data-reveal>One loadstring. <span>Then build.</span></p>
+			<div class="hero__actions" data-reveal>
+				<a class="button button--primary" href="docs.html#start">Start with the docs <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+			</div>
+			<footer class="footer">
+				<span>Halcyon · MIT licence</span>
+				<nav aria-label="Footer">
+					<a href="docs.html">Docs</a>
+					<a href="docs.html#changelog">Changelog</a>
+					<a href="https://github.com/ScriptsForDays/Halcyon">GitHub</a>
+				</nav>
+			</footer>
+		</section>
+	</main>
+</body>
+</html>

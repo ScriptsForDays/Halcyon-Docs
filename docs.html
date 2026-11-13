@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Docs · Halcyon</title>
+	<meta name="description" content="How to build a Roblox script hub with Halcyon: windows, tabs, sections, every control, looks and presets, the key system, images, the update log and configs.">
+	<meta name="theme-color" content="#f8f9fb">
+	<link rel="icon" href="favicon.svg" type="image/svg+xml">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
+	<link rel="stylesheet" href="styles.css">
+	<script src="site.js" defer></script>
+</head>
+<body>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="i-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14a5 5 0 0 1 10 0"/><path d="M3 14h18"/><path d="M6.5 18h11"/><path d="M10 21.5h4"/><path d="M12 5v2"/><path d="m5.6 7.6 1.4 1.4"/><path d="m18.4 7.6-1.4 1.4"/></symbol>
+		<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+		<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+		<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+		<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+		<symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+		<symbol id="i-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+	</svg>
+
+	<a class="skip" href="#main">Skip to content</a>
+
+	<header class="nav">
+		<nav class="nav__bar" aria-label="Main">
+			<a class="brand" href="./"><svg aria-hidden="true"><use href="#i-mark"/></svg>Halcyon</a>
+			<a class="nav__link" href="docs.html" aria-current="page">Docs</a>
+			<a class="nav__link nav__link--wide" href="#looks">Looks</a>
+			<a class="nav__link nav__link--wide" href="#assistants">For AI</a>
+			<a class="icon-button" href="https://github.com/ScriptsForDays/Halcyon" aria-label="Halcyon on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+			<button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+				<svg class="icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+				<svg class="icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+			</button>
+		</nav>
+	</header>
+
+	<div class="wrap docs">
+		<aside class="toc" aria-label="On this page">
+			<button class="toc__toggle" type="button" aria-expanded="false" aria-controls="toc-list">On this page <svg aria-hidden="true"><use href="#i-chevron"/></svg></button>
+			<ul class="toc__list" id="toc-list">
+				<li class="toc__group">Basics</li>
+				<li><a href="#start">Getting started</a></li>
+				<li><a href="#window">Window</a></li>
+				<li><a href="#tabs">Tabs and sections</a></li>
+				<li><a href="#elements">Controls</a></li>
+				<li class="toc__group">Look and feel</li>
+				<li><a href="#looks">Looks and presets</a></li>
+				<li><a href="#themes">Themes and personalising</a></li>
+				<li><a href="#images">Images</a></li>
+				<li class="toc__group">Hub features</li>
+				<li><a href="#keys">Key system</a></li>
+				<li><a href="#profile">Profile and Discord</a></li>
+				<li><a href="#feedback">Notices and dialogs</a></li>
+				<li><a href="#updates">Update log</a></li>
+				<li><a href="#panels">Panels</a></li>
+				<li><a href="#configs">Configs and saving</a></li>
+				<li class="toc__group">More</li>
+				<li><a href="#assistants">For AI assistants</a></li>
+				<li><a href="#changelog">Changelog</a></li>
+			</ul>
+		</aside>
+
+		<main class="prose" id="main">
+			<h1>Halcyon docs</h1>
+			<p class="lede">Everything you need to build a hub, in reading order. Each part links to the full reference on GitHub when there's more to say.</p>
+
+			<section id="start" aria-labelledby="start-h">
+				<h2 id="start-h"><a class="heading-link" href="#start">Getting started</a></h2>
+				<p>Load the library, make a window, add a tab, a section and some controls. Call <code>LoadAutoload</code> last so a saved config can restore everything you built.</p>
+				<div class="code">
+					<pre><code><span class="tok-k">local</span> Halcyon = loadstring(game:HttpGet(<span class="tok-s">"https://raw.githubusercontent.com/ScriptsForDays/Halcyon/main/dist/Halcyon.luau"</span>))()
+
+<span class="tok-k">local</span> Window = Halcyon:CreateWindow({ Title = <span class="tok-s">"My Hub"</span>, Icon = <span class="tok-s">"gamepad-2"</span>, Folder = <span class="tok-s">"MyHub"</span> })
+<span class="tok-k">if not</span> Window <span class="tok-k">then return end</span> <span class="tok-c">-- only needed with a KeySystem</span>
+
+<span class="tok-k">local</span> Player = Window:Tab({ Title = <span class="tok-s">"Player"</span>, Icon = <span class="tok-s">"user"</span> })
+<span class="tok-k">local</span> Movement = Player:Section({ Title = <span class="tok-s">"Movement"</span>, Icon = <span class="tok-s">"footprints"</span> })
+
+Movement:Toggle({ Title = <span class="tok-s">"Fly"</span>, Flag = <span class="tok-s">"Fly"</span>, Callback = <span class="tok-k">function</span>(on) <span class="tok-k">end</span> })
+Movement:Slider({ Title = <span class="tok-s">"Walk speed"</span>, Min = 16, Max = 120, Default = 32, Flag = <span class="tok-s">"WalkSpeed"</span> })
+
+Window:SettingsTab()
+Window.OnUnload:Connect(<span class="tok-k">function</span>() <span class="tok-c">-- undo what the hub changed</span> <span class="tok-k">end</span>)
+Window:LoadAutoload()</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p>In Roblox Studio, insert <code>dist/Halcyon.rbxmx</code> into ReplicatedStorage and <code>require</code> it from a LocalScript instead.</p>
+				<div class="callout"><p>Running the same hub twice replaces the first window, as long as <code>Folder</code> stays the same. You don't need your own "already running" check.</p></div>
+			</section>
+
+			<section id="window" aria-labelledby="window-h">
+				<h2 id="window-h"><a class="heading-link" href="#window">Window</a></h2>
+				<p>Every option is optional. These are the ones most hubs touch:</p>
+				<div class="table">
+					<table>
+						<thead><tr><th>Option</th><th>What it does</th></tr></thead>
+						<tbody>
+							<tr><td><code>Title</code>, <code>Subtitle</code>, <code>Icon</code></td><td>Shown in the top bar. <code>Version</code> adds a tag beside the title.</td></tr>
+							<tr><td><code>Folder</code></td><td>Where configs and settings save, and the hub's identity across runs.</td></tr>
+							<tr><td><code>TabStyle</code></td><td>Sidebar, Rail, Top or Dock navigation. Narrow windows use Top.</td></tr>
+							<tr><td><code>Size</code>, <code>Scale</code></td><td>Starting size (always fitted to the screen) and interface scale.</td></tr>
+							<tr><td><code>ToggleKey</code></td><td>The key that shows and hides the window. RightShift by default.</td></tr>
+							<tr><td><code>TopbarImage</code></td><td>A picture before the title, in six shapes with <code>TopbarImageStyle</code>.</td></tr>
+							<tr><td><code>CommandPalette</code></td><td><code>true</code> lets Ctrl+K search every tab and setting.</td></tr>
+							<tr><td><code>Profile</code>, <code>KeySystem</code>, <code>UpdateLog</code></td><td>Covered in their own parts below.</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<p>The window also has <code>Notify</code>, <code>Dialog</code>, <code>SetEnabled</code> (grey every control), <code>AddTopbarButton</code> and <code>Unload</code>. The full list is in the <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#window">API reference</a>.</p>
+			</section>
+
+			<section id="tabs" aria-labelledby="tabs-h">
+				<h2 id="tabs-h"><a class="heading-link" href="#tabs">Tabs and sections</a></h2>
+				<p>A tab is a page; a section is a titled box of rows on it. Wide windows show two columns, and <code>Side = "Right"</code> puts a section in the second. On a phone everything stacks in the order you wrote it.</p>
+				<div class="code">
+					<pre><code><span class="tok-k">local</span> Combat = Window:Tab({ Title = <span class="tok-s">"Combat"</span>, Icon = <span class="tok-s">"swords"</span>, Group = <span class="tok-s">"Features"</span> })
+<span class="tok-k">local</span> Aim = Combat:Section({ Title = <span class="tok-s">"Aim"</span>, Tabs = { <span class="tok-s">"Players"</span>, <span class="tok-s">"NPCs"</span> } })
+Aim:Tab(<span class="tok-s">"NPCs"</span>):Toggle({ Title = <span class="tok-s">"Target bosses first"</span> })
+
+<span class="tok-k">local</span> Farm = Combat:Section({ Title = <span class="tok-s">"Auto farm"</span>, Switch = { Default = <span class="tok-k">false</span>, Flag = <span class="tok-s">"Farm"</span> }, Side = <span class="tok-s">"Right"</span> })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<ul>
+					<li><strong>Tabs inside a section</strong> (<code>Tabs</code>) keep parallel settings together.</li>
+					<li><strong>A header switch</strong> (<code>Switch</code>) greys every row in the section while it's off.</li>
+					<li><strong><code>ShowWhen</code></strong> on any row or section shows it only while another control has a value, so tuning options appear only when they apply.</li>
+					<li><strong>Locks:</strong> <code>Tier</code> or <code>PaidOnly</code> on a tab, section or row keeps it visible but locked, with your own wording.</li>
+				</ul>
+			</section>
+
+			<section id="elements" aria-labelledby="elements-h">
+				<h2 id="elements-h"><a class="heading-link" href="#elements">Controls</a></h2>
+				<p>Every control takes one table of options and returns a handle with <code>Get</code>, <code>Set</code> and <code>Changed</code>. <code>Set</code> always runs the Callback; creating a control doesn't, except a Toggle that starts on.</p>
+				<div class="table">
+					<table>
+						<thead><tr><th>Control</th><th>Use it for</th></tr></thead>
+						<tbody>
+							<tr><td><code>Toggle</code></td><td>A feature that stays on or off. Can carry its own keybind and colour.</td></tr>
+							<tr><td><code>Button</code>, <code>Buttons</code></td><td>Something that happens now. Hold-to-confirm, press-twice and loading states.</td></tr>
+							<tr><td><code>Slider</code></td><td>A number in a known range, with a typed value box, prefix, percent or range.</td></tr>
+							<tr><td><code>Segmented</code>, <code>Radio</code></td><td>One of a few options, all visible.</td></tr>
+							<tr><td><code>Dropdown</code></td><td>One or several of many: icons, headings, searchable, or the server's players.</td></tr>
+							<tr><td><code>Checklist</code>, <code>Chips</code>, <code>Tiles</code></td><td>Several picks of one kind, as rows, pills or icon cards.</td></tr>
+							<tr><td><code>Input</code></td><td>Free text or an unbounded number. Password, multi-line, counter, clear.</td></tr>
+							<tr><td><code>Keybind</code>, <code>ColorPicker</code>, <code>DatePicker</code></td><td>A key, a colour or a date the player chooses.</td></tr>
+							<tr><td><code>Stepper</code>, <code>Rating</code></td><td>Small exact counts and levels.</td></tr>
+							<tr><td><code>Progress</code>, <code>Status</code>, <code>Countdown</code></td><td>State the hub reports: progress, a status pill, time left.</td></tr>
+							<tr><td><code>Table</code></td><td>Sortable rows and columns of data.</td></tr>
+							<tr><td><code>Paragraph</code>, <code>Label</code>, <code>Accordion</code></td><td>Text, callouts and fold-out help.</td></tr>
+							<tr><td><code>Divider</code>, <code>Space</code>, <code>Code</code>, <code>Image</code></td><td>Structure and media.</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<p>Every control also takes <code>Description</code>, <code>Icon</code>, <code>Flag</code>, <code>Tooltip</code>, <code>Badge</code>, <code>Info</code> and <code>Requires</code> (lock the row when the executor lacks a function). Options for each control are in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#elements">the API reference</a>.</p>
+			</section>
+
+			<section id="looks" aria-labelledby="looks-h">
+				<h2 id="looks-h"><a class="heading-link" href="#looks">Looks and presets</a></h2>
+				<p>Nothing changes until you opt in. Then you choose how far to go:</p>
+				<div class="code">
+					<pre><code><span class="tok-c">-- One control</span>
+Section:Toggle({ Title = <span class="tok-s">"Fly"</span>, Style = <span class="tok-s">"Slim"</span> })
+
+<span class="tok-c">-- Every control of a kind in this window</span>
+Halcyon:CreateWindow({ Title = <span class="tok-s">"Hub"</span>, Styles = { Toggle = <span class="tok-s">"Slim"</span>, Slider = <span class="tok-s">"Thick"</span> } })
+
+<span class="tok-c">-- A coordinated set: Classic, Minimal, Glass, Neon or Compact</span>
+Halcyon:CreateWindow({ Title = <span class="tok-s">"Hub"</span>, Preset = <span class="tok-s">"Glass"</span> })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<figure class="picture">
+					<img src="img/looks-glass.jpg" width="1095" height="568" alt="The example hub rebuilt with the Glass preset and Mac-style window buttons" loading="lazy">
+				</figure>
+				<p>An element's own <code>Style</code> wins over the window's <code>Styles</code>, which win over a preset. The example hub's Looks tab shows every look with the line that turns it on. The complete list is in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/styles.md">styles.md</a>.</p>
+			</section>
+
+			<section id="themes" aria-labelledby="themes-h">
+				<h2 id="themes-h"><a class="heading-link" href="#themes">Themes and personalising</a></h2>
+				<p>Sixteen themes ship with the library, each keeping text at a contrast of 4.5 or more on every surface. Colours are roles, so switching themes recolours everything already on screen.</p>
+				<div class="code">
+					<pre><code>Halcyon:SetTheme(<span class="tok-s">"Aurora"</span>)
+Halcyon:AddTheme({ Name = <span class="tok-s">"Mine"</span>, Base = <span class="tok-s">"Midnight"</span>, accent = Color3.fromRGB(80, 220, 160) })
+
+Window:SettingsTab({ Personalise = <span class="tok-k">true</span>, ThemeBuilder = <span class="tok-k">true</span> })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p><code>Personalise</code> lets players change font, text size, corners, spacing, window transparency and notice position, live and saved. <code>ThemeBuilder</code> lets them make a theme and share it as text.</p>
+			</section>
+
+			<section id="images" aria-labelledby="images-h">
+				<h2 id="images-h"><a class="heading-link" href="#images">Images</a></h2>
+				<p>Anywhere Halcyon takes an image or icon, it accepts an icon name, an asset id, an https URL or a file in the executor's workspace. URLs download once to <code>Halcyon/assets</code> and show through <code>getcustomasset</code>.</p>
+				<div class="code">
+					<pre><code>Halcyon:CreateWindow({
+	Title = <span class="tok-s">"My Hub"</span>,
+	TopbarImage = <span class="tok-s">"https://example.com/logo.png"</span>,
+	TopbarImageStyle = <span class="tok-s">"Squircle"</span>, <span class="tok-c">-- Circle, Rounded, Square, Squircle, Ring, Badge</span>
+})</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p>Images over 5 MB are refused, and files must stay inside the workspace. Where <code>getcustomasset</code> isn't available, such as Roblox Studio, an image icon shows instead.</p>
+			</section>
+
+			<section id="keys" aria-labelledby="keys-h">
+				<h2 id="keys-h"><a class="heading-link" href="#keys">Key system</a></h2>
+				<p>Tiers run from lowest to highest. Keyless needs no key, Free is a key earned through your ad link, and Paid unlocks everything. Use your own names if they fit better.</p>
+				<div class="code">
+					<pre><code>KeySystem = {
+	Title = <span class="tok-s">"My Hub access"</span>,
+	Discord = <span class="tok-s">"https://discord.gg/example"</span>,
+	Tiers = {
+		{ NoKey = <span class="tok-k">true</span> },
+		{ Name = <span class="tok-s">"Free"</span>, AdService = { Name = <span class="tok-s">"Linkvertise"</span>, Link = <span class="tok-s">"https://…"</span>, Confirm = <span class="tok-k">function</span>(key) <span class="tok-k">return</span> askYourServer(key) <span class="tok-k">end</span> } },
+		{ Name = <span class="tok-s">"Paid"</span>, Validate = <span class="tok-k">function</span>(key) <span class="tok-k">return</span> askYourServer(key) <span class="tok-k">end</span> },
+	},
+}</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<div class="callout"><p>A key prompt in a client script is a gate for honest players, not security. Check keys on your own server and keep anything valuable there.</p></div>
+				<p>More in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/key-system.md">key-system.md</a>.</p>
+			</section>
+
+			<section id="profile" aria-labelledby="profile-h">
+				<h2 id="profile-h"><a class="heading-link" href="#profile">Profile and Discord</a></h2>
+				<p>The profile card shows the player's avatar, name, tier, executor and clock, with an anonymous mode. <code>Profile = false</code> hides it.</p>
+				<div class="code">
+					<pre><code>Profile = { ShowClock = <span class="tok-k">true</span>, Discord = <span class="tok-s">"https://discord.gg/example"</span> }</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p>The Discord button on the profile is separate from the one on the key prompt; set either, both or neither. A press opens the invite in the Discord app when it's running; otherwise it copies the link. Either way the player is told which.</p>
+			</section>
+
+			<section id="feedback" aria-labelledby="feedback-h">
+				<h2 id="feedback-h"><a class="heading-link" href="#feedback">Notices and dialogs</a></h2>
+				<div class="code">
+					<pre><code>Window:Notify({ Title = <span class="tok-s">"Config saved"</span>, Kind = <span class="tok-s">"success"</span>, Style = <span class="tok-s">"Compact"</span> })
+
+<span class="tok-k">local</span> job = Window:Notify({ Title = <span class="tok-s">"Downloading"</span>, Style = <span class="tok-s">"Progress"</span> })
+job.SetProgress(0.5)
+job.Done(<span class="tok-s">"Downloaded"</span>)
+
+Window:Dialog({
+	Title = <span class="tok-s">"Delete this config?"</span>,
+	Buttons = { { Title = <span class="tok-s">"Keep"</span> }, { Title = <span class="tok-s">"Delete"</span>, Variant = <span class="tok-s">"Danger"</span>, Delay = 3 } },
+})</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p>Notices come in ten styles. Send them for results players can't see (saved, failed, finished), not for every toggle; the switch moving is feedback enough.</p>
+			</section>
+
+			<section id="updates" aria-labelledby="updates-h">
+				<h2 id="updates-h"><a class="heading-link" href="#updates">Update log</a></h2>
+				<p><code>UpdateLog = true</code> adds a tab of releases, newest first, with changes grouped by kind, search, filters and a badge until the player has seen the newest.</p>
+				<div class="code">
+					<pre><code>UpdateLog = {
+	Popup = <span class="tok-k">true</span>, <span class="tok-c">-- show the newest once as a what's-new card</span>
+	Updates = {
+		{ Version = <span class="tok-s">"1.2.0"</span>, Date = <span class="tok-s">"12 Nov 2026"</span>, Title = <span class="tok-s">"Auto farm"</span>, Entries = {
+			{ Kind = <span class="tok-s">"New"</span>, Text = <span class="tok-s">"Auto farm for the mines"</span> },
+			{ Kind = <span class="tok-s">"Fixed"</span>, Text = <span class="tok-s">"Teleports after respawn"</span> },
+		} },
+	},
+}
+
+Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { Kind = <span class="tok-s">"Fixed"</span>, Text = <span class="tok-s">"Crash on join"</span> } } })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<figure class="picture">
+					<img src="img/looks-updates.jpg" width="1095" height="568" alt="The update log tab with search, kind filters and the latest release open" loading="lazy">
+				</figure>
+				<p>Kinds are New, Improved, Fixed, Removed and Security. Versions sort by number, so 1.10 comes after 1.9. <code>UpdateLog = false</code> builds nothing.</p>
+			</section>
+
+			<section id="panels" aria-labelledby="panels-h">
+				<h2 id="panels-h"><a class="heading-link" href="#panels">Panels</a></h2>
+				<ul>
+					<li><code>Window:Loading()</code> covers the window during setup and moves only as you call <code>SetProgress</code>.</li>
+					<li><code>Window:Changelog()</code> shows a what's-new card once per version.</li>
+					<li><code>Tab:EmptyState()</code> fills a tab whose content isn't ready, or failed to load.</li>
+					<li><code>Window:Lock()</code> and <code>Unlock()</code> block the hub for maintenance or a required update.</li>
+					<li><code>Tab:About()</code> lists credits and links the player can copy.</li>
+				</ul>
+				<figure class="picture">
+					<img src="img/looks-lock.jpg" width="878" height="503" alt="A lock screen saying the hub is down for maintenance" loading="lazy">
+				</figure>
+			</section>
+
+			<section id="configs" aria-labelledby="configs-h">
+				<h2 id="configs-h"><a class="heading-link" href="#configs">Configs and saving</a></h2>
+				<p>A config holds the value of every control with a <code>Flag</code>. The Settings tab includes a config section, or place one anywhere with <code>Window:ConfigSection(tab)</code>.</p>
+				<p>Loading a config runs each flagged Callback, so give Flags to settings worth restoring, not to toggles that start something risky. The player's interface choices save on their own to <code>Halcyon/&lt;Folder&gt;/settings.json</code>.</p>
+			</section>
+
+			<section id="assistants" aria-labelledby="assistants-h">
+				<h2 id="assistants-h"><a class="heading-link" href="#assistants">For AI assistants</a></h2>
+				<p>If you build hubs with an AI assistant, give it two files:</p>
+				<ul>
+					<li><a href="https://github.com/ScriptsForDays/Halcyon/blob/main/LLM.txt">LLM.txt</a> lists every component in the same shape: what it's for, when not to use it, its options, its looks and common mistakes.</li>
+					<li><a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/llm-guide.md">llm-guide.md</a> explains how to pick controls, how much to put on a tab and what to leave out, with the reasons.</li>
+				</ul>
+				<div class="code">
+					<pre><code>https://raw.githubusercontent.com/ScriptsForDays/Halcyon/main/LLM.txt</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+			</section>
+
+			<section id="changelog" aria-labelledby="changelog-h">
+				<h2 id="changelog-h"><a class="heading-link" href="#changelog">Changelog</a></h2>
+				<h3>2.1.0</h3>
+				<ul>
+					<li>Images from a URL or workspace file anywhere the UI takes one, through <code>getcustomasset</code>.</li>
+					<li><code>TopbarImage</code> in six shapes.</li>
+					<li>Discord buttons for the key prompt and the profile card.</li>
+					<li><code>UpdateLog</code>, a tab of releases with search, filters and an unseen badge.</li>
+				</ul>
+				<h3>2.0.0</h3>
+				<ul>
+					<li>Named looks for every control, and five presets.</li>
+					<li>Twelve new controls, including Radio, Tiles, Table and DatePicker.</li>
+					<li>Window looks, open animations, tab markers and tabs inside sections.</li>
+					<li>Tooltips, spotlights, five more notice styles and Ctrl+K search.</li>
+					<li>Six more themes, live personalising and a theme builder.</li>
+					<li>Loading, what's-new, empty-state and lock panels.</li>
+				</ul>
+				<h3>1.0.0</h3>
+				<p>First release. The full history is in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/CHANGELOG.md">CHANGELOG.md</a>.</p>
+			</section>
+
+			<footer class="footer">
+				<span>Halcyon · MIT licence</span>
+				<nav aria-label="Footer">
+					<a href="./">Home</a>
+					<a href="https://github.com/ScriptsForDays/Halcyon">GitHub</a>
+				</nav>
+			</footer>
+		</main>
+	</div>
+</body>
+</html>
