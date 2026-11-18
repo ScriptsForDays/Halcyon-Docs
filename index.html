@@ -4,10 +4,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Halcyon · UI library for Roblox script hubs</title>
-	<meta name="description" content="Halcyon is a Luau UI library for Roblox script hubs: one loadstring, 37 controls with named looks, a key system with tiers, saved configs and sixteen themes.">
+	<meta name="description" content="Halcyon is a Luau UI library for Roblox script hubs: one loadstring, 43 controls with named looks, a key system with tiers, saved configs and sixteen themes.">
 	<meta name="theme-color" content="#f8f9fb">
 	<meta property="og:title" content="Halcyon · UI library for Roblox script hubs">
-	<meta property="og:description" content="One loadstring, 37 controls with named looks, a key system with tiers, saved configs and sixteen themes.">
+	<meta property="og:description" content="One loadstring, 43 controls with named looks, a key system with tiers, saved configs and sixteen themes.">
 	<meta property="og:type" content="website">
 	<meta property="og:image" content="https://scriptsfordays.github.io/Halcyon-Docs/img/hero.jpg">
 	<link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -49,7 +49,7 @@
 		<div class="wrap hero">
 			<div>
 				<h1 class="hero__title">Script hubs that feel <span>finished</span>.</h1>
-				<p class="hero__lede">Halcyon is a Luau UI library for Roblox executors. One loadstring gives you a window with 37 controls, a key system with tiers, saved configs and sixteen themes, and it reflows from a 4K monitor down to a phone.</p>
+				<p class="hero__lede">Halcyon is a Luau UI library for Roblox executors. One loadstring gives you a window with 43 controls, a key system with tiers, saved configs and sixteen themes, and it reflows from a 4K monitor down to a phone.</p>
 				<div class="hero__actions">
 					<a class="button button--primary" href="docs.html#start">Read the docs <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
 					<a class="button button--quiet" href="play.html">Try it in your browser</a>
@@ -84,6 +84,46 @@
 			</div>
 		</div>
 
+		<section class="section" aria-labelledby="depth-title">
+			<div class="wrap split split--flip">
+				<div data-reveal>
+					<h2 class="section__title" id="depth-title">Depth behind the window, time on the edge.</h2>
+					<p class="section__body">New in 2.3: a slow aurora drifts behind the window and shows through the cards, and a notice's outline drains back to its top centre as its time runs out. Give a notice an <code>Id</code> and it updates in place instead of stacking.</p>
+					<ul class="facts">
+						<li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Six moving backgrounds</strong> for the window or one section, including a light that follows the pointer.</span></li>
+						<li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Tweens, not scripts:</strong> nothing runs every frame, and the motion stops while the hub is hidden.</span></li>
+						<li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Edge, Ring, Bar or Top</strong> countdowns, set per notice or for all of them.</span></li>
+					</ul>
+				</div>
+				<figure class="picture" data-reveal>
+					<img src="img/looks-countdown.jpg" width="2124" height="1220" alt="The example hub over an aurora background, with three notices counting down around their borders" loading="lazy">
+				</figure>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="room-title">
+			<div class="wrap">
+				<div data-reveal>
+					<h2 class="section__title" id="room-title">More room without more tabs.</h2>
+					<p class="section__body">Sub-pages open from a row with a breadcrumb and a back arrow. A section can pop out into its own panel that stays over the game while the hub is hidden. Players star the rows they use into a Favourites tab and drag tabs into their own order.</p>
+				</div>
+				<div class="panels">
+					<figure data-reveal>
+						<div class="picture"><img src="img/looks-popout.jpg" width="2096" height="1040" alt="The Session section floating in its own panel beside the hub" loading="lazy"></div>
+						<figcaption><code>PopOut = true</code> floats a section; drag its corner to resize.</figcaption>
+					</figure>
+					<figure data-reveal>
+						<div class="picture"><img src="img/looks-page.jpg" width="1516" height="1040" alt="A sub-page called Prediction with a breadcrumb back to Components" loading="lazy"></div>
+						<figcaption><code>Section:Page</code> opens a sub-page.</figcaption>
+					</figure>
+					<figure data-reveal>
+						<div class="picture"><img src="img/looks-favourites.jpg" width="1516" height="1040" alt="The Favourites tab holding walk speed, infinite jump and field of view" loading="lazy"></div>
+						<figcaption><code>Favourites = true</code> keeps each player's shortlist.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</section>
+
 		<section class="section" aria-labelledby="looks-title">
 			<div class="wrap split">
 				<div data-reveal>
@@ -93,7 +133,7 @@
 						<div><dt>Toggle</dt><dd>10</dd></div>
 						<div><dt>Slider</dt><dd>7</dd></div>
 						<div><dt>Button</dt><dd>8</dd></div>
-						<div><dt>Section</dt><dd>7</dd></div>
+						<div><dt>Section</dt><dd>8</dd></div>
 						<div><dt>Notice</dt><dd>10</dd></div>
 						<div><dt>Theme</dt><dd>16</dd></div>
 					</dl>
@@ -160,7 +200,7 @@
 			<div class="wrap split split--flip">
 				<div data-reveal>
 					<h2 class="section__title" id="assistants-title">Written for assistants, too.</h2>
-					<p class="section__body">LLM.txt describes every component the same way: what it's for, when not to use it, its options and its mistakes. The layout guide teaches an assistant to choose controls and leave things out, so vibe-coded hubs stay tidy.</p>
+					<p class="section__body">LLM.txt describes every component the same way: what it's for, when not to use it, its options and its mistakes. The layout guide teaches an assistant to choose controls and leave things out, so vibe-coded hubs stay tidy. With <code>Debug = true</code>, a misspelt option gets a warning that names the one you meant.</p>
 					<div class="hero__actions">
 						<a class="button button--quiet" href="https://github.com/ScriptsForDays/Halcyon/blob/main/LLM.txt">LLM.txt</a>
 						<a class="button button--quiet" href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/llm-guide.md">Layout guide</a>

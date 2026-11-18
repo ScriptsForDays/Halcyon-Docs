@@ -50,8 +50,10 @@
 				<li><a href="#window">Window</a></li>
 				<li><a href="#tabs">Tabs and sections</a></li>
 				<li><a href="#elements">Controls</a></li>
+				<li><a href="#pages">Pages, pop-outs, favourites</a></li>
 				<li class="toc__group">Look and feel</li>
 				<li><a href="#looks">Looks and presets</a></li>
+				<li><a href="#backgrounds">Moving backgrounds</a></li>
 				<li><a href="#themes">Themes and personalising</a></li>
 				<li><a href="#images">Images</a></li>
 				<li class="toc__group">Hub features</li>
@@ -62,6 +64,8 @@
 				<li><a href="#panels">Panels</a></li>
 				<li><a href="#configs">Configs and saving</a></li>
 				<li class="toc__group">More</li>
+				<li><a href="#languages">Languages</a></li>
+				<li><a href="#extending">Extending Halcyon</a></li>
 				<li><a href="#assistants">For AI assistants</a></li>
 				<li><a href="#changelog">Changelog</a></li>
 			</ul>
@@ -172,10 +176,33 @@ Aim:Tab(<span class="tok-s">"NPCs"</span>):Toggle({ Title = <span class="tok-s">
 							<tr><td><code>MenuButton</code>, <code>Banner</code>, <code>Link</code></td><td>A menu of actions, an announcement card, and an address the player can copy.</td></tr>
 							<tr><td><code>Paragraph</code>, <code>Label</code>, <code>Accordion</code></td><td>Text, callouts and fold-out help.</td></tr>
 							<tr><td><code>Divider</code>, <code>Space</code>, <code>Code</code>, <code>Image</code></td><td>Structure and media.</td></tr>
+							<tr><td><code>Gauge</code>, <code>Knob</code></td><td>A value shown as a ring, and a dial the player turns.</td></tr>
+							<tr><td><code>Chart</code></td><td>Donut, pie, line or bar charts with a legend and hover values.</td></tr>
+							<tr><td><code>ItemGrid</code></td><td>An inventory of cards with rarities, counts, search and sort.</td></tr>
+							<tr><td><code>Waypoints</code></td><td>Places the player saves, renames and teleports back to.</td></tr>
+							<tr><td><code>Viewport</code></td><td>A 3D model or the player's own character, turned by dragging.</td></tr>
 						</tbody>
 					</table>
 				</div>
 				<p>Every control also takes <code>Description</code>, <code>Icon</code>, <code>Flag</code>, <code>Tooltip</code>, <code>Badge</code>, <code>Info</code>, <code>Menu</code> (actions on a right-click or long press) and <code>Requires</code> (lock the row when the executor lacks a function). Options for each control are in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/api.md#elements">the API reference</a>.</p>
+				<p>Some controls take a little more. A Toggle can share an <code>Exclusive</code> group so only one is on, or ask with <code>Confirm</code> before it turns on. A Keybind with <code>Modifiers = true</code> records Ctrl, Shift and Alt combinations, a Button can carry its own <code>Keybind</code>, and an Input's <code>Validate</code> refuses text with a reason under the box.</p>
+				<p>Handles also have <code>SetSilent</code> (change the value without running the Callback), <code>Reset</code> and <code>GetDefault</code>. A Callback that errors shows its reason under its row instead of stopping the hub.</p>
+			</section>
+
+			<section id="pages" aria-labelledby="pages-h">
+				<h2 id="pages-h"><a class="heading-link" href="#pages">Pages, pop-outs, favourites</a></h2>
+				<p>A sub-page opens from a row on a tab or section, with a breadcrumb and a back arrow; Escape goes back. Pages hold sections like a tab does, and search reaches the rows inside them.</p>
+				<div class="code">
+					<pre><code><span class="tok-k">local</span> Aim = Combat:Section({ Title = <span class="tok-s">"Aim"</span>, PopOut = <span class="tok-k">true</span> })
+<span class="tok-k">local</span> Prediction = Aim:Page({ Title = <span class="tok-s">"Prediction"</span>, Description = <span class="tok-s">"How far ahead to aim"</span> })
+Prediction:Section({ Title = <span class="tok-s">"Lead"</span> }):Slider({ Title = <span class="tok-s">"Lead time"</span>, Flag = <span class="tok-s">"Lead"</span>, Min = 0, Max = 1, Step = 0.05 })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<figure class="picture">
+					<img src="img/looks-page.jpg" width="1516" height="1040" alt="A sub-page called Prediction with a breadcrumb back to Components" loading="lazy">
+				</figure>
+				<p><code>PopOut = true</code> puts a button in the section's header that moves its rows into a floating panel. Drag the panel by its title bar and resize it from the bottom-right corner. It stays on screen while the hub is hidden, so a live readout or a quick switch keeps working over the game. Where it sits and whether it was out are saved.</p>
+				<p><code>Favourites = true</code> adds a Favourites tab at the top. Players star a row from its right-click or long-press menu and get a live copy there; changing either one changes both. <code>Favourite = true</code> on a row starts it in the list the first time the hub runs. <code>TabReorder = true</code> lets players drag tabs into their own order and pin them.</p>
 			</section>
 
 			<section id="looks" aria-labelledby="looks-h">
@@ -196,6 +223,30 @@ Halcyon:CreateWindow({ Title = <span class="tok-s">"Hub"</span>, Preset = <span 
 					<img src="img/looks-glass.jpg" width="1095" height="568" alt="The example hub rebuilt with the Glass preset and Mac-style window buttons" loading="lazy">
 				</figure>
 				<p>An element's own <code>Style</code> wins over the window's <code>Styles</code>, which win over a preset. The example hub's Looks tab shows every look with the line that turns it on. The complete list is in <a href="https://github.com/ScriptsForDays/Halcyon/blob/main/docs/styles.md">styles.md</a>.</p>
+			</section>
+
+			<section id="backgrounds" aria-labelledby="backgrounds-h">
+				<h2 id="backgrounds-h"><a class="heading-link" href="#backgrounds">Moving backgrounds</a></h2>
+				<p>A background behind the whole window, or inside one section. It moves with tweens, so no script runs every frame, and it stops while the hub or its tab is hidden. With reduced motion it holds still.</p>
+				<div class="code">
+					<pre><code>Halcyon:CreateWindow({ Title = <span class="tok-s">"Farm"</span>, Background = { Kind = <span class="tok-s">"Aurora"</span>, Sheen = <span class="tok-k">true</span> } })
+Farm:Section({ Title = <span class="tok-s">"Session"</span>, Background = { Kind = <span class="tok-s">"Glow"</span>, Intensity = 0.55 } })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<div class="table">
+					<table>
+						<thead><tr><th>Key</th><th>What it does</th></tr></thead>
+						<tbody>
+							<tr><td><code>Kind</code></td><td>Aurora, Glow (a light that follows the pointer), Gradient, Mesh, Pattern or Image.</td></tr>
+							<tr><td><code>Colors</code></td><td>Theme roles or Color3 values. By default, the accent and two hues beside it.</td></tr>
+							<tr><td><code>Speed</code>, <code>Intensity</code></td><td>How fast it moves, and how strongly it shows: 0.75 behind the window, 0.3 in a section.</td></tr>
+							<tr><td><code>Sheen</code></td><td>A band of light crosses it every few seconds.</td></tr>
+							<tr><td><code>Vignette</code></td><td>Darker edges. On by default behind the window.</td></tr>
+							<tr><td><code>SeeThrough</code></td><td>How much of a window background shows through the cards, 0 to 0.6. Default 0.35.</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<p>Use one behind the window and at most one or two sections with their own, for the section players should look at first. A popped-out section takes its background into the panel. <code>Window:SetBackground</code> and <code>Section:SetBackground</code> change or remove one while the hub runs.</p>
 			</section>
 
 			<section id="themes" aria-labelledby="themes-h">
@@ -270,6 +321,16 @@ Window:Dialog({
 					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
 				</div>
 				<p>Notices come in ten styles. They pause while hovered and swipe away, and <code>NotificationCenter = true</code> keeps the last 50 behind a bell in the top bar. Send them for results players can't see (saved, failed, finished), not for every toggle; the switch moving is feedback enough.</p>
+				<div class="code">
+					<pre><code>Window:Notify({ Title = <span class="tok-s">"Config saved"</span>, Kind = <span class="tok-s">"success"</span>, Countdown = <span class="tok-s">"Edge"</span> })
+
+<span class="tok-c">-- The same Id updates the notice on screen instead of adding another</span>
+Window:Notify({ Id = <span class="tok-s">"farm"</span>, Title = <span class="tok-s">"Farming"</span>, Content = coins .. <span class="tok-s">" coins"</span>, Duration = 0 })
+
+Halcyon:SetNotificationDefaults({ Countdown = <span class="tok-s">"Ring"</span>, Stack = <span class="tok-s">"Deck"</span> })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p><code>Countdown</code> is Bar, Edge (the outline drains back to the top centre), Ring, Top or None. Identical notices fold into one card with a count unless <code>Merge = false</code>. <code>Stack = "Deck"</code> piles them and fans them out on hover. Notices also take <code>Image</code>, <code>OnClick</code> and <code>OnDismiss</code>.</p>
 			</section>
 
 			<section id="updates" aria-labelledby="updates-h">
@@ -293,6 +354,7 @@ Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { K
 					<img src="img/looks-updates.jpg" width="1095" height="568" alt="The update log tab with search, kind filters and the latest release open" loading="lazy">
 				</figure>
 				<p>Kinds are New, Improved, Fixed, Removed and Security. Versions sort by number, so 1.10 comes after 1.9. <code>UpdateLog = false</code> builds nothing.</p>
+				<p><code>UpdateCheck = { Url = "..." }</code> reads a version number from your own address a moment after the hub opens and tells players when a newer one is out. It never runs what it downloads. For bug reports, <code>Window:SupportPanel()</code> lists what the player's executor can do and which rows are locked for it, and <code>Window:ErrorsPanel()</code> lists failed callbacks with tracebacks. Both are rows in the Settings tab too.</p>
 			</section>
 
 			<section id="panels" aria-labelledby="panels-h">
@@ -313,6 +375,42 @@ Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { K
 				<h2 id="configs-h"><a class="heading-link" href="#configs">Configs and saving</a></h2>
 				<p>A config holds the value of every control with a <code>Flag</code>. The Settings tab includes a config section, or place one anywhere with <code>Window:ConfigSection(tab)</code>.</p>
 				<p>Loading a config runs each flagged Callback, so give Flags to settings worth restoring, not to toggles that start something risky. The player's interface choices save on their own to <code>Halcyon/&lt;Folder&gt;/settings.json</code>.</p>
+				<p><code>Window:ExportConfig()</code> turns every setting into one line of text that another player can paste with <code>ImportConfig</code>; this needs no file access. Loading, importing or resetting can be taken back with <code>Window:Undo()</code>; from the config rows, the notice that follows has an Undo button. With <code>Configs = { PerGame = "Place" }</code> (or <code>"Universe"</code>), each game keeps its own configs and autoload.</p>
+			</section>
+
+			<section id="languages" aria-labelledby="languages-h">
+				<h2 id="languages-h"><a class="heading-link" href="#languages">Languages</a></h2>
+				<p>Halcyon's own words (buttons, prompts, the Settings tab) come in nine languages: English, Brazilian Portuguese, Spanish, Vietnamese, Indonesian, Russian, Turkish, French and German. <code>Language = "auto"</code> follows the player's Roblox language, and the Settings tab lets them pick. Your own titles stay as you wrote them.</p>
+				<div class="code">
+					<pre><code>Halcyon:CreateWindow({ Title = <span class="tok-s">"Farm"</span>, Language = <span class="tok-s">"auto"</span>, Strings = { [<span class="tok-s">"Save"</span>] = <span class="tok-s">"Keep"</span> } })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p><code>Strings</code> replaces any built-in wording with your own. The translations are short and open to fixes from native speakers.</p>
+			</section>
+
+			<section id="extending" aria-labelledby="extending-h">
+				<h2 id="extending-h"><a class="heading-link" href="#extending">Extending Halcyon</a></h2>
+				<ul>
+					<li><strong><code>Debug = true</code></strong> warns about option names Halcyon doesn't know, with a guess at the one you meant, and about misspelt looks and themes.</li>
+					<li><strong><code>Halcyon:Build(spec)</code></strong> makes a whole hub from one table and returns its controls by Flag or Id. A mistake names its place in the table.</li>
+					<li><strong><code>Halcyon:RegisterElement(kind, definition)</code></strong> adds your own control. It gets flags, configs, locks, search and <code>ShowWhen</code> like the built-in ones.</li>
+					<li><strong><code>dist/Halcyon.types.luau</code></strong> gives luau-lsp and Studio's editor the type of every option and method.</li>
+				</ul>
+				<div class="code">
+					<pre><code><span class="tok-k">local</span> Window, controls = Halcyon:Build({
+	Window = { Title = <span class="tok-s">"Farm"</span>, Folder = <span class="tok-s">"Farm"</span>, Debug = <span class="tok-k">true</span> },
+	Tabs = {
+		{ Title = <span class="tok-s">"Farm"</span>, Sections = {
+			{ Title = <span class="tok-s">"Auto"</span>, Elements = {
+				{ <span class="tok-s">"Toggle"</span>, Title = <span class="tok-s">"Auto farm"</span>, Flag = <span class="tok-s">"AutoFarm"</span> },
+				{ <span class="tok-s">"Slider"</span>, Title = <span class="tok-s">"Range"</span>, Flag = <span class="tok-s">"Range"</span>, Min = 10, Max = 200, Default = 80 },
+			} },
+		} },
+	},
+	SettingsTab = <span class="tok-k">true</span>,
+})</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
 			</section>
 
 			<section id="assistants" aria-labelledby="assistants-h">
@@ -330,6 +428,17 @@ Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { K
 
 			<section id="changelog" aria-labelledby="changelog-h">
 				<h2 id="changelog-h"><a class="heading-link" href="#changelog">Changelog</a></h2>
+				<h3>2.3.0</h3>
+				<ul>
+					<li>The resize grip keeps the window's corner under the pointer wherever the window sits.</li>
+					<li>Sub-pages, pop-out sections, favourites and tabs players can drag into order.</li>
+					<li>Gauge, Knob, Chart, ItemGrid, Waypoints and Viewport.</li>
+					<li>Notices that count down around their border, update in place by <code>Id</code> and fold repeats together.</li>
+					<li>Moving backgrounds for the window and sections.</li>
+					<li>Search marks the matched words and steps through every match.</li>
+					<li>Share codes, undo, per-game configs, nine languages, an update check, and support and errors panels.</li>
+					<li><code>Debug</code>, <code>Halcyon:Build</code>, <code>RegisterElement</code> and Luau types.</li>
+				</ul>
 				<h3>2.2.0</h3>
 				<ul>
 					<li>Every built-in part turns on or off with <code>true</code> or <code>false</code>, and <code>Window:Set</code> flips them live.</li>
