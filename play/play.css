@@ -127,6 +127,17 @@
 /* Roblox draws the shadow as a nine-slice image that is dark all the way
    under the window, so it is a blurred filled box here. A box-shadow alone
    leaves the strip just below the window unshaded. */
+.hc-light {
+	background: radial-gradient(closest-side, currentColor 30%, transparent 100%);
+}
+
+.hc-outline {
+	position: absolute;
+	box-sizing: border-box;
+	border-style: solid;
+	pointer-events: none;
+}
+
 .hc-shadow {
 	inset: 50px;
 	border-radius: 14px;

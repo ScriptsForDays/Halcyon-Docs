@@ -40,6 +40,24 @@ const udim = (scale, offset, whole = "100%") => {
 	return `calc(${whole} * ${scale} + ${px(offset)})`;
 };
 
+// Roblox turns a UIGradient in the frame's own 0-1 space, so on a wide
+// frame its angle in pixels differs from Rotation. Returns the CSS angle and
+// how far Offset slides the stops along it (a share of the gradient).
+const gradientLine = (gradient, size) => {
+	const turn = ((gradient.Rotation || 0) * Math.PI) / 180;
+	const [w, h] = size && size[0] > 0 && size[1] > 0 ? size : [1, 1];
+	const angle = (Math.atan2(h * Math.cos(turn), -w * Math.sin(turn)) * 180) / Math.PI;
+	const offset = gradient.Offset || [0, 0];
+	return { angle, shift: offset[0] * Math.cos(turn) + offset[1] * Math.sin(turn) };
+};
+const at = (share, shift) => `${Math.round((share + shift) * 10000) / 100}%`;
+const fadeMask = (gradient, line) => {
+	const fades = gradient.Transparency || [];
+	return fades.length
+		? `linear-gradient(${line.angle}deg, ${fades.map((k) => `rgba(0,0,0,${1 - k[1]}) ${at(k[0], line.shift)}`).join(", ")})`
+		: "";
+};
+
 export class Renderer {
 	constructor(stage, onEvent) {
 		this.stage = stage;
@@ -211,7 +229,10 @@ export class Renderer {
 		if (!node) return;
 		node.props[key] = value;
 		if (COMPONENT.has(node.cls)) {
-			if (node.parent) this.markLayout(node.parent);
+			// A gradient on a UIStroke changes how the stroke's frame looks.
+			let host = node.parent;
+			while (host && COMPONENT.has(host.cls)) host = host.parent;
+			if (host) this.markLayout(host);
 			return;
 		}
 		this.dirty.add(node);
@@ -223,7 +244,7 @@ export class Renderer {
 			this.renderText(node);
 			this.dirty.add(node);
 		}
-		if (key === "Image" || key === "ImageColor3" || key === "ImageTransparency") this.renderImage(node);
+		if (key === "Image" || key === "ImageColor3" || key === "ImageTransparency" || key === "Name") this.renderImage(node);
 		if (key === "GroupTransparency") this.dirty.add(node);
 	}
 
@@ -406,15 +427,14 @@ export class Renderer {
 		const transparency = p.BackgroundTransparency ?? 0;
 		const gradient = node.comps.UIGradient?.props;
 		if (gradient && gradient.Enabled !== false && transparency < 1) {
-			const angle = 90 + (gradient.Rotation || 0);
+			const line = gradientLine(gradient, this.sizeOf(node));
 			const base = p.BackgroundColor3 || [255, 255, 255];
 			const colors = (gradient.Color || [[0, 255, 255, 255]]).map(
-				(k) => `${rgb([(k[1] * base[0]) / 255, (k[2] * base[1]) / 255, (k[3] * base[2]) / 255], 1 - transparency)} ${k[0] * 100}%`,
+				(k) => `${rgb([(k[1] * base[0]) / 255, (k[2] * base[1]) / 255, (k[3] * base[2]) / 255], 1 - transparency)} ${at(k[0], line.shift)}`,
 			);
 			s.backgroundColor = "transparent";
-			s.backgroundImage = `linear-gradient(${angle}deg, ${colors.join(", ")})`;
-			const fades = gradient.Transparency || [];
-			s.maskImage = fades.length ? `linear-gradient(${angle}deg, ${fades.map((k) => `rgba(0,0,0,${1 - k[1]}) ${k[0] * 100}%`).join(", ")})` : "";
+			s.backgroundImage = `linear-gradient(${line.angle}deg, ${colors.join(", ")})`;
+			s.maskImage = fadeMask(gradient, line);
 		} else {
 			s.backgroundImage = "";
 			s.maskImage = "";
@@ -424,10 +444,18 @@ export class Renderer {
 		s.borderRadius = corner ? (corner[0] >= 0.5 ? "9999px" : corner[0] ? `${corner[0] * 100}%` : px(corner[1])) : "";
 		const stroke = node.comps.UIStroke?.props;
 		const strokesText = stroke && TEXT.has(node.cls) && stroke.ApplyStrokeMode !== "Border" && p.Text;
-		s.boxShadow =
-			stroke && stroke.Enabled !== false && !strokesText && (stroke.Transparency ?? 0) < 1
-				? `0 0 0 ${px(stroke.Thickness ?? 1)} ${rgb(stroke.Color, 1 - (stroke.Transparency ?? 0))}`
-				: "";
+		const showStroke = stroke && stroke.Enabled !== false && !strokesText && (stroke.Transparency ?? 0) < 1;
+		// A gradient on the stroke hides part of the outline (Halcyon's
+		// countdown edges and rings), so that outline is its own element
+		// with a mask; a plain one stays a box-shadow.
+		const strokeFade = showStroke ? node.comps.UIStroke.comps.UIGradient?.props : null;
+		if (strokeFade && strokeFade.Enabled !== false) {
+			s.boxShadow = "";
+			this.styleOutline(node, stroke, strokeFade, corner);
+		} else {
+			s.boxShadow = showStroke ? `0 0 0 ${px(stroke.Thickness ?? 1)} ${rgb(stroke.Color, 1 - (stroke.Transparency ?? 0))}` : "";
+			if (node.outline) node.outline.style.display = "none";
+		}
 		// A CanvasGroup draws its children into one picture, so it always clips.
 		s.overflow = p.ClipsDescendants || node.cls === "ScrollingFrame" || node.cls === "CanvasGroup" ? "hidden" : "";
 		s.opacity = node.cls === "CanvasGroup" ? String(1 - (p.GroupTransparency ?? 0)) : "";
@@ -446,6 +474,31 @@ export class Renderer {
 	}
 
 	// Padding and the child layout of an element's box.
+	// The last measured pixel size of a node, if it has been drawn.
+	sizeOf(node) {
+		const entry = this.rects.get(node.id);
+		if (!entry) return null;
+		const parts = entry.split(",");
+		return [Number(parts[3]), Number(parts[4])];
+	}
+
+	styleOutline(node, stroke, gradient, corner) {
+		if (!node.outline) {
+			node.outline = document.createElement("span");
+			node.outline.className = "hc-outline";
+			node.el.append(node.outline);
+		}
+		const o = node.outline.style;
+		const thickness = stroke.Thickness ?? 1;
+		const size = this.sizeOf(node);
+		o.display = "";
+		o.inset = px(-thickness);
+		o.borderWidth = px(thickness);
+		o.borderColor = rgb(stroke.Color, 1 - (stroke.Transparency ?? 0));
+		o.borderRadius = corner ? (corner[0] >= 0.5 ? "9999px" : px((corner[1] || 0) + thickness)) : "";
+		o.maskImage = fadeMask(gradient, gradientLine(gradient, size && [size[0] + thickness * 2, size[1] + thickness * 2]));
+	}
+
 	styleBox(node, autoX, autoY) {
 		const box = node.box;
 		const s = box.style;
@@ -598,6 +651,11 @@ export class Renderer {
 		} else if (ASSETS[image] || (name && image && hasIcon(name))) {
 			el.innerHTML = icon(ASSETS[image] || name);
 			el.className = "hc-image hc-icon";
+		} else if (SHADOW_ASSETS.has(image) && (p.Name ?? node.name) === "Light") {
+			// Moving backgrounds stretch the same soft square into fields of light.
+			el.innerHTML = "";
+			el.className = "hc-image hc-light";
+			el.style.backgroundImage = "";
 		} else if (SHADOW_ASSETS.has(image)) {
 			el.innerHTML = "";
 			el.className = "hc-image hc-shadow";

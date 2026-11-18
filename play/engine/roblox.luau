@@ -718,7 +718,7 @@ end
 local EVENTS = {}
 for _, name in
 	string.split(
-		"Activated,MouseEnter,MouseLeave,MouseButton1Down,MouseButton1Up,MouseButton1Click,MouseButton2Click,MouseButton2Down,"
+		"Activated,MouseEnter,MouseLeave,MouseMoved,MouseButton1Down,MouseButton1Up,MouseButton1Click,MouseButton2Click,MouseButton2Down,"
 			.. "MouseButton2Up,InputBegan,InputChanged,InputEnded,FocusLost,Focused,Destroying,ChildAdded,ChildRemoved,Changed,"
 			.. "Heartbeat,RenderStepped,Stepped,CharacterAdded,Completed,SelectionGained,SelectionLost,TouchTap,TouchLongPress,"
 			.. "ReturnPressedFromOnScreenKeyboard,PlayerAdded,PlayerRemoving,DescendantAdded,DescendantRemoving,AncestryChanged,"
@@ -816,6 +816,10 @@ local function defaults(className, props)
 		if BUTTON_CLASSES[className] then
 			props.AutoButtonColor = true
 		end
+		if className == "CanvasGroup" then
+			props.GroupTransparency = 0
+			props.GroupColor3 = Color3.new(1, 1, 1)
+		end
 		if className == "ScrollingFrame" then
 			props.CanvasSize = UDim2.new(0, 0, 2, 0)
 			props.CanvasPosition = Vector2.zero
@@ -891,6 +895,14 @@ local function defaults(className, props)
 		props.Rotation = 0
 		props.Offset = Vector2.zero
 		props.Enabled = true
+	elseif className == "NumberValue" or className == "IntValue" then
+		props.Value = 0
+	elseif className == "BoolValue" then
+		props.Value = false
+	elseif className == "StringValue" then
+		props.Value = ""
+	elseif className == "Color3Value" then
+		props.Value = Color3.new(0, 0, 0)
 	elseif className == "BlurEffect" then
 		props.Size = 24
 		props.Enabled = true
@@ -1582,13 +1594,40 @@ local function stepTweens()
 		if elapsed < 0 then
 			continue
 		end
-		local t = if info.Time <= 0 then 1 else math.clamp(elapsed / info.Time, 0, 1)
-		local alpha = ease(info.EasingStyle.Name, info.EasingDirection.Name, t)
+		-- One play runs forwards (and back, with Reverses), then waits
+		-- DelayTime before each repeat; RepeatCount -1 repeats for ever.
+		local time = math.max(info.Time, 0)
+		local span = if info.Reverses then time * 2 else time
+		local period = span + math.max(info.DelayTime or 0, 0)
+		local round = if period > 0 then math.floor(elapsed / period) else 0
+		local repeats = info.RepeatCount or 0
+		-- The last round ends as soon as it has played; no wait follows it.
+		local done = period <= 0 or (repeats >= 0 and (round > repeats or (round == repeats and elapsed - round * period >= span)))
+		local phase
+		if done then
+			phase = if info.Reverses then 0 else 1
+		else
+			local into = elapsed - round * period
+			if into >= span then
+				phase = if info.Reverses then 0 else 1
+			elseif info.Reverses and into > time then
+				phase = 1 - (into - time) / time
+			else
+				phase = if time > 0 then into / time else 1
+			end
+		end
+		local alpha = ease(info.EasingStyle.Name, info.EasingDirection.Name, phase)
 		local starts = rawget(tween, "starts")
 		for key, goal in rawget(tween, "goals") do
-			target[key] = if t >= 1 then goal else lerp(starts[key], goal, alpha)
+			if phase >= 1 then
+				target[key] = goal
+			elseif phase <= 0 then
+				target[key] = starts[key]
+			else
+				target[key] = lerp(starts[key], goal, alpha)
+			end
 		end
-		if t >= 1 then
+		if done then
 			finishTween(tween, Enum.PlaybackState.Completed)
 		end
 	end
@@ -1842,6 +1881,7 @@ local function applyInput(event)
 			local instance = byId[id]
 			if instance then
 				instance.InputChanged:Fire(input)
+				instance.MouseMoved:Fire(event.x, event.y)
 			end
 		end
 	elseif kind == "enter" or kind == "leave" then
