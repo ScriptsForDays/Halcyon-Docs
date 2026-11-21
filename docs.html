@@ -386,6 +386,20 @@ Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { K
 					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
 				</div>
 				<p><code>Strings</code> replaces any built-in wording with your own. The translations are short and open to fixes from native speakers.</p>
+				<h3>Your hub's own text</h3>
+				<p><code>Translate = true</code> shows the hub's own text in the player's language as well: tab and section names, row titles and descriptions, options, placeholders, menus, dialogs and notices. You don't write any translations. The window's Title is the hub's name and stays as written.</p>
+				<div class="code">
+					<pre><code>Halcyon:CreateWindow({ Title = <span class="tok-s">"Farm"</span>, Folder = <span class="tok-s">"Farm"</span>, Language = <span class="tok-s">"auto"</span>, Translate = <span class="tok-k">true</span> })
+
+<span class="tok-c">-- or, with your own wording and names left alone</span>
+Translate = {
+	Fixes = { de = { [<span class="tok-s">"Auto farm"</span>] = <span class="tok-s">"Auto-Farmen"</span> } },
+	Skip = { <span class="tok-s">"Blox Fruits"</span> },
+}</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
+				</div>
+				<p>Lines go to Google's free translate service, about forty at a time, with numbers swapped for markers, and are saved per language in the workspace so each is fetched once. Until a line comes back, or if the service fails, it shows as written. Values, flags and callbacks always get the text as you wrote it, so <code>Dropdown:Get()</code> still returns <code>"Forest"</code>, and search matches both languages. <code>Service = function(lines, from, to) ... end</code> plugs in another translator.</p>
+				<div class="callout"><p>Only the hub's own wording is sent. Text the player types is never sent. The hub's name and anything in <code>Skip</code> stay as written, even inside a sentence, and so do gaming terms like Ping and Keyless, acronyms like FPS, and codes or links.</p></div>
 			</section>
 
 			<section id="extending" aria-labelledby="extending-h">
@@ -428,6 +442,12 @@ Window:AddUpdate({ Version = <span class="tok-s">"1.2.1"</span>, Entries = { { K
 
 			<section id="changelog" aria-labelledby="changelog-h">
 				<h2 id="changelog-h"><a class="heading-link" href="#changelog">Changelog</a></h2>
+				<h3>2.3.1</h3>
+				<ul>
+					<li><code>Translate = true</code> shows a hub's own text in the player's language.</li>
+					<li>Longer words in other languages stay inside log filters, chart legends, stat cards and buttons.</li>
+					<li>Item names, tier names, section titles and input placeholders shrink a little before they are cut off.</li>
+				</ul>
 				<h3>2.3.0</h3>
 				<ul>
 					<li>The resize grip keeps the window's corner under the pointer wherever the window sits.</li>
