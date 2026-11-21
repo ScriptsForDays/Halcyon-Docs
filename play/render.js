@@ -289,6 +289,26 @@ export class Renderer {
 			if (node.cls === "ScreenGui") this.styleLayer(node);
 			else this.style(node);
 		}
+		this.fitScaled(list);
+	}
+
+	// TextScaled with a UITextSizeConstraint: Roblox shrinks the text, down to
+	// MinTextSize, until it fits the label's width. Measured after the styles
+	// above are in, since the label's width can depend on its siblings.
+	fitScaled(list) {
+		for (const node of list) {
+			if (!node.inner || !node.el || node.props.TextScaled !== true || !this.nodes.has(node.id)) continue;
+			const limits = node.comps.UITextSizeConstraint?.props || {};
+			const largest = limits.MaxTextSize ?? node.props.TextSize ?? 14;
+			const smallest = limits.MinTextSize ?? 1;
+			const target = node.text.style;
+			target.fontSize = px(largest);
+			const room = node.el.clientWidth;
+			const needed = node.inner.scrollWidth;
+			if (room > 0 && needed > room) {
+				target.fontSize = px(Math.max(smallest, Math.floor((largest * room) / needed)));
+			}
+		}
 	}
 
 	styleLayer(node) {
@@ -591,7 +611,7 @@ export class Renderer {
 		const font = p.FontFace || ["", 400, "Normal"];
 		s.fontWeight = String(font[1] || 400);
 		s.fontStyle = font[2] === "Italic" ? "italic" : "";
-		s.fontSize = px(p.TextSize ?? 14);
+		s.fontSize = px(p.TextScaled === true ? node.comps.UITextSizeConstraint?.props.MaxTextSize ?? p.TextSize ?? 14 : p.TextSize ?? 14);
 		const transparency = p.TextTransparency ?? 0;
 		s.color = rgb(p.TextColor3, 1 - transparency);
 		s.lineHeight = String(1.2 * (p.LineHeight ?? 1));
@@ -601,6 +621,7 @@ export class Renderer {
 			s.textAlign = { Left: "left", Center: "center", Right: "right" }[p.TextXAlignment] || "center";
 			if (document.activeElement !== node.input && node.input.value !== (p.Text ?? "")) node.input.value = p.Text ?? "";
 			node.input.readOnly = p.TextEditable === false;
+			node.input.style.textOverflow = p.TextTruncate && p.TextTruncate !== "None" ? "ellipsis" : "";
 			return;
 		}
 		// The text sits in the element's own grid cell, so it sizes an element
@@ -617,6 +638,12 @@ export class Renderer {
 		s.alignItems = { Top: "flex-start", Center: "center", Bottom: "flex-end" }[p.TextYAlignment] || "center";
 		s.textAlign = { Left: "left", Center: "center", Right: "right" }[p.TextXAlignment] || "center";
 		s.overflow = truncate ? "hidden" : "";
+		// A label that grows with its text but has a MaxSize cuts the text at
+		// that size, as Roblox does, so its text can't be wider than the label.
+		const capped = truncate && !laidOut && (p.AutomaticSize === "X" || p.AutomaticSize === "XY") && node.comps.UISizeConstraint;
+		s.maxWidth = capped ? "100%" : "";
+		s.minWidth = capped ? "0" : "";
+		if (capped) node.el.style.gridTemplateColumns = "minmax(0, 1fr)";
 		node.inner.style.overflow = truncate ? "hidden" : "";
 		node.inner.style.textOverflow = truncate ? "ellipsis" : "";
 		node.inner.style.whiteSpace = truncate && !wrapped ? "pre" : "";
