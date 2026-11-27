@@ -723,7 +723,7 @@ for _, name in
 			.. "Heartbeat,RenderStepped,Stepped,CharacterAdded,Completed,SelectionGained,SelectionLost,TouchTap,TouchLongPress,"
 			.. "ReturnPressedFromOnScreenKeyboard,PlayerAdded,PlayerRemoving,DescendantAdded,DescendantRemoving,AncestryChanged,"
 			.. "MouseWheelForward,MouseWheelBackward,WindowFocused,WindowFocusReleased,LastInputTypeChanged,TextChanged,"
-			.. "JumpRequest,CharacterRemoving,Idled,TextBoxFocused,TextBoxFocusReleased",
+			.. "JumpRequest,CharacterRemoving,Idled,TextBoxFocused,TextBoxFocusReleased,TeleportInitFailed",
 		","
 	)
 do
@@ -1670,6 +1670,16 @@ function Methods:GetNetworkPing()
 	return 0.04
 end
 
+function Methods:GetProductInfoAsync()
+	return { Name = "Halcyon demo" }
+end
+
+-- There is no server to join from a web page; the hub reports the reason.
+function Methods:Teleport()
+	error("Teleporting only works inside Roblox", 0)
+end
+Methods.TeleportToPlaceInstance = Methods.Teleport
+
 -- The page has no Roblox client, so this reports what the Luau VM itself uses.
 function Methods:GetTotalMemoryUsageMb()
 	return gcinfo() / 1024
@@ -1743,6 +1753,11 @@ local workspace = game:GetService("Workspace")
 workspace.CurrentCamera = newInstance("Camera")
 workspace.CurrentCamera.ViewportSize = viewport
 workspace.CurrentCamera.FieldOfView = 70
+rawget(workspace, "props").DistributedGameTime = 0
+-- A web page has no game traffic to measure.
+local stats = game:GetService("Stats")
+rawget(stats, "props").DataReceiveKbps = 0
+rawget(stats, "props").DataSendKbps = 0
 
 local localPlayer
 do
@@ -1758,6 +1773,7 @@ do
 	playerGui.Parent = player
 	player.Parent = players
 	players.LocalPlayer = player
+	players.MaxPlayers = 12
 	localPlayer = player
 
 	-- A few other people, so player lists have someone to show.
@@ -2046,6 +2062,8 @@ function Engine.step(dt, payload)
 	end
 	Engine.now += dt
 	Engine.frame += 1
+	-- On a client this is how long it has been connected.
+	rawget(workspace, "props").DistributedGameTime = Engine.now
 	runTimers()
 	stepTweens()
 	runService.RenderStepped:Fire(dt)

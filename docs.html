@@ -49,6 +49,8 @@
 				<li><a href="#start">Getting started</a></li>
 				<li><a href="#window">Window</a></li>
 				<li><a href="#tabs">Tabs and sections</a></li>
+				<li><a href="#home">Home screen</a></li>
+				<li><a href="#large">Large hubs and games</a></li>
 				<li><a href="#elements">Controls</a></li>
 				<li><a href="#pages">Pages, pop-outs, favourites</a></li>
 				<li class="toc__group">Look and feel</li>
@@ -150,6 +152,33 @@ Aim:Tab(<span class="tok-s">"NPCs"</span>):Toggle({ Title = <span class="tok-s">
 					<li><strong><code>Section:Group()</code></strong> puts two or three short controls on one line.</li>
 					<li><strong>Locks:</strong> <code>Tier</code> or <code>PaidOnly</code> on a tab, section or row keeps it visible but locked, with your own wording.</li>
 				</ul>
+			</section>
+
+			<section id="home" aria-labelledby="home-h">
+				<h2 id="home-h"><a class="heading-link" href="#home">Home screen</a></h2>
+				<p>One call puts a ready first tab in front of your own: the player's avatar and a greeting, the game and its player count, Rejoin, Server hop and Copy join, frame rate, ping and time in the server, then What's new and a Join the Discord button.</p>
+				<div class="code">
+					<pre><code>local Home = Window:Home({ Discord = <span class="tok-s">"https://discord.gg/yourcode"</span> })
+Home:Section({ Title = <span class="tok-s">"Farm"</span> }):Stat({ Title = <span class="tok-s">"Coins"</span>, Value = 0 })</code></pre>
+				</div>
+				<p>Every block takes <code>false</code>: <code>Identity</code>, <code>Game</code>, <code>Server</code>, <code>Rejoin</code>, <code>ServerHop</code>, <code>CopyJoin</code>, <code>Performance</code>, <code>Updates</code>. Anonymous mode hides the name and avatar. Rejoin and Server hop ask for a second press.</p>
+			</section>
+
+			<section id="large" aria-labelledby="large-h">
+				<h2 id="large-h"><a class="heading-link" href="#large">Large hubs and many games</a></h2>
+				<p>A tab given <code>Build</code> is filled over the next frames, so hundreds of rows don't stall the game. The open tab builds at once, autoload waits for the rest, and <code>Window:WhenBuilt</code> tells you when every row exists. A row made inside <code>Build</code> may not exist on the next line of your script.</p>
+				<div class="code">
+					<pre><code>Window:Tab({ Title = <span class="tok-s">"Farm"</span>, Build = <span class="tok-k">function</span>(tab)
+	tab:Section({ Title = <span class="tok-s">"Auto"</span> }):Toggle({ Title = <span class="tok-s">"Auto collect"</span>, Flag = <span class="tok-s">"Collect"</span> })
+<span class="tok-k">end</span> })
+
+Window:LoadGame({
+	[920587237] = <span class="tok-k">function</span>(window) <span class="tok-k">end</span>,
+	[3260590327] = <span class="tok-s">"https://raw.githubusercontent.com/you/hub/3f2a1c9/games/tower.luau"</span>,
+	Default = <span class="tok-k">function</span>(window) <span class="tok-k">end</span>,
+})</code></pre>
+				</div>
+				<p><code>LoadGame</code> matches <code>PlaceId</code>, then <code>GameId</code>, then <code>Default</code>. A downloaded file must return a function that takes the window. It runs with everything your executor can do: Halcyon only fetches <code>https</code> addresses you write there, but it can't tell whether a file was tampered with, so point at a commit, not a branch.</p>
 			</section>
 
 			<section id="elements" aria-labelledby="elements-h">
@@ -442,6 +471,18 @@ Translate = {
 
 			<section id="changelog" aria-labelledby="changelog-h">
 				<h2 id="changelog-h"><a class="heading-link" href="#changelog">Changelog</a></h2>
+				<h3>2.4.1</h3>
+				<ul>
+					<li>Home no longer reads "Keyless key" for the tier that needs no key.</li>
+				</ul>
+				<h3>2.4.0</h3>
+				<ul>
+					<li><code>Window:Home()</code>, a ready first tab.</li>
+					<li>Tabs given <code>Build</code> fill over frames, and <code>Window:LoadGame</code> runs a module per game.</li>
+					<li>Look changes: rows are 44 px by default, stat tiles are plain unless <code>Style = "Card"</code>, banners without a picture have no box, and a narrow window shows tab icons.</li>
+					<li>Button groups take <code>Confirm</code>, <code>Color</code> and <code>Equal</code>.</li>
+					<li>Fixed: <code>Hold</code> buttons run again and answer gamepad A and Enter; disabled and locked rows ignore both; the colour picker shows its hue.</li>
+				</ul>
 				<h3>2.3.1</h3>
 				<ul>
 					<li><code>Translate = true</code> shows a hub's own text in the player's language.</li>
