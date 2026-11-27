@@ -160,6 +160,7 @@ Aim:Tab(<span class="tok-s">"NPCs"</span>):Toggle({ Title = <span class="tok-s">
 				<div class="code">
 					<pre><code>local Home = Window:Home({ Discord = <span class="tok-s">"https://discord.gg/yourcode"</span> })
 Home:Section({ Title = <span class="tok-s">"Farm"</span> }):Stat({ Title = <span class="tok-s">"Coins"</span>, Value = 0 })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
 				</div>
 				<p>Every block takes <code>false</code>: <code>Identity</code>, <code>Game</code>, <code>Server</code>, <code>Rejoin</code>, <code>ServerHop</code>, <code>CopyJoin</code>, <code>Performance</code>, <code>Updates</code>. Anonymous mode hides the name and avatar. Rejoin and Server hop ask for a second press.</p>
 			</section>
@@ -177,6 +178,7 @@ Window:LoadGame({
 	[3260590327] = <span class="tok-s">"https://raw.githubusercontent.com/you/hub/3f2a1c9/games/tower.luau"</span>,
 	Default = <span class="tok-k">function</span>(window) <span class="tok-k">end</span>,
 })</code></pre>
+					<button class="copy" type="button"><svg class="icon-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="icon-check" aria-hidden="true"><use href="#i-check"/></svg><span class="copy__label">Copy</span></button>
 				</div>
 				<p><code>LoadGame</code> matches <code>PlaceId</code>, then <code>GameId</code>, then <code>Default</code>. A downloaded file must return a function that takes the window. It runs with everything your executor can do: Halcyon only fetches <code>https</code> addresses you write there, but it can't tell whether a file was tampered with, so point at a commit, not a branch.</p>
 			</section>
